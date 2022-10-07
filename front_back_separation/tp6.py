@@ -11,5 +11,5 @@ for temp in temps_list:
     else:
         temps_dict[t] = 1
 
-for temp, count in temps_dict.items():
+for temp, count in sorted(temps_dict.items()):
     print("{}: {}".format(temp, count))
