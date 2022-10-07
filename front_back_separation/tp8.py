@@ -37,6 +37,8 @@ def menu():
         print("Température maximale: {}°C".format(max(temps_list)))
     elif user_input == "q":
         return False
+    else:
+        print("Choix invalide")
     return True
 
 
