@@ -20,10 +20,25 @@ def show():
         print("{}°C".format(temp))
 
 
-average = avg(temps_list)
-maximum = max(temps_list)
-minimum = min(temps_list)
-print("Moyenne: ", round(average, 2))
-print("Maximum: ", maximum)
-print("Minimum: ", minimum)
-show()
+def menu():
+    print("1. Afficher les températures")
+    print("2. Afficher la température moyenne")
+    print("3. Afficher la température minimale")
+    print("4. Afficher la température maximale")
+    print("q. Quitter")
+    user_input = input("Votre choix: ")
+    if user_input == "1":
+        show()
+    elif user_input == "2":
+        print("Température moyenne: {}°C".format(avg(temps_list)))
+    elif user_input == "3":
+        print("Température minimale: {}°C".format(min(temps_list)))
+    elif user_input == "4":
+        print("Température maximale: {}°C".format(max(temps_list)))
+    elif user_input == "q":
+        return False
+    return True
+
+
+while menu():
+    pass
