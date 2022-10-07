@@ -37,3 +37,5 @@ class LargeEnterprise(Enterprise):
             super().__init__(name, 50, turnover, "Grande entreprise")
         self.montantCE = montantCE
 
+    def __repr__(self) -> str:
+        return "L'entreprise {} a {} employés et un chiffre d'affaires de {}$. Le montant CE est egal à {}.".format(self.name, self.employeesCount, self.turnover, self.montantCE)
