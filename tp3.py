@@ -11,6 +11,7 @@ while lifes > 0:
     if guess in guesses:
         print("Tu as déjà deviné ce chiffre !")
         continue
+    guesses.append(guess)
     if guess == randnum:
         print("Tu as gagné !")
         break
