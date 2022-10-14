@@ -37,4 +37,11 @@ while True:
             print("Index invalide")
             continue
     elif choix == '4':
-        print(sum(notes) / len(notes))
+        try:
+            summ = 0
+            for note in notes:
+                summ += note
+            print(summ / len(notes))
+        except ZeroDivisionError:
+            print("Aucune note enregistrée")
+
