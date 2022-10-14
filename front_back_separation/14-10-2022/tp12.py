@@ -1,4 +1,7 @@
-def menu():
+from typing import List
+
+
+def menu() -> str:
     print("1. Ajouter une note")
     print("2. Afficher les notes")
     print("3. Afficher une note")
@@ -11,7 +14,7 @@ def menu():
     return choix
 
 
-notes = []
+notes: List[int] = []
 
 while True:
     choix = menu()
