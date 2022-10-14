@@ -1,6 +1,7 @@
 import random
 import csv
 from typing import List
+import os
 
 
 temps_list = [random.randint(18, 25) for _ in range(30)]
@@ -13,6 +14,10 @@ def avg(l: List[int]):
 def show():
     for temp in sorted(temps_list):
         print("{}°C".format(temp))
+
+
+def get_cwd():
+    return os.getcwd()
 
 
 def menu():
@@ -33,7 +38,7 @@ def menu():
         print("Température maximale: {}°C".format(max(temps_list)))
     elif user_input == "5":
         try:
-            with open("/Users/dk/Documents/studies/m1/front_back_separation/14-10-2022/tp16.csv", "w") as f:
+            with open(get_cwd()+"/front_back_separation/14-10-2022/tp16.csv", "w") as f:
                 writer = csv.writer(f)
                 for idx, temp in enumerate(temps_list):
                     writer.writerow([idx, temp])
