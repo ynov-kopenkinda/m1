@@ -38,6 +38,6 @@ class SongAPIView(ModelViewSet):
             data = data.filter(title=filters["title"])
         return data
 
-    @action(detail=False, methods=["get"])
+    @action(detail=False, methods=["get"], url_path="names")
     def get_names(self, request: None):
         return Response({"names": [song.title for song in Song.objects.all()]})
