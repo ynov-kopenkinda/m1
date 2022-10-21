@@ -26,6 +26,5 @@ router.register('songs', SongAPIView, basename='songs')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('api/songs/names/', SongAPIView.as_view({"get": "get_names"})),
     path('api/', include(router.urls)),
 ]

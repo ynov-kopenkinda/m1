@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 from .models import Artist, Song
 from .serializers import ArtistSerializer, SongSerializer
 
@@ -37,5 +38,6 @@ class SongAPIView(ModelViewSet):
             data = data.filter(title=filters["title"])
         return data
 
+    @action(detail=False, methods=["get"])
     def get_names(self, request: None):
         return Response({"names": [song.title for song in Song.objects.all()]})
