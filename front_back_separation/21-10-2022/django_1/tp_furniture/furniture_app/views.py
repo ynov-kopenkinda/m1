@@ -20,6 +20,8 @@ class FurnitureAPIView(ModelViewSet):
     @action(detail=True, methods=['put'])
     def change_state(self, request: Request, pk: int):
         furniture = Furniture.objects.get(id=pk)
+        if request.data['state'] not in ['NEW', 'USD', 'BRK', 'UNS']:
+            return Response({'error': 'State "{}" does not exits.'.format(request.data['state'])}, status=400)
         furniture.state = request.data['state']
         furniture.save()
         return Response({'message': 'state changed to {}'.format(furniture.state)})
