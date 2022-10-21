@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="manifest" href="/public/manifest.json" />
+    <link rel="stylesheet" href="/public/style.css" />
+    <style>
+      button {
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body style="overscroll-behavior-y: contain">
+    <div class="grid place-items-center h-screen w-screen bg-red-200">
+      <h1 class="text-3xl font-bold">Hi</h1>
+
+      <div>
+        <div id="counter" class="text-center font-mono font-black text-9xl">0</div>
+        <br />
+        <button
+          id="counter-inc"
+          class="font-black text-4xl p-4 border border-red-300"
+        >
+          +
+        </button>
+        <button
+          id="counter-dec"
+          class="font-black text-4xl p-4 border border-red-300"
+        >
+          -
+        </button>
+      </div>
+    </div>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
