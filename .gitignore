@@ -1,5 +1,6 @@
 __pycache__/
+.DS_Store
 node_modules/
-/front_back_separation/21-10-2022/django_1/bin
-/front_back_separation/21-10-2022/django_1/include
-/front_back_separation/21-10-2022/django_1/lib
+/front_back_separation/**/bin
+/front_back_separation/**/include
+/front_back_separation/**/lib
