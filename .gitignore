@@ -4,3 +4,4 @@ node_modules/
 /front_back_separation/**/bin
 /front_back_separation/**/include
 /front_back_separation/**/lib
+*.zip
