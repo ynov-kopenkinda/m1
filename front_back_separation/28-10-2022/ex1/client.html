@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client</title>
+  </head>
+  <body>
+    <h1 style="text-align: center; font-weight: bold">CRM</h1>
+    <i style="color: gray">Ajouter un client</i>
+
+    <br />
+    <br />
+    <form onsubmit="return">
+      <input type="text" name="name" placeholder="name" />
+      <br />
+      <br />
+      <input type="text" name="surname" placeholder="surname" />
+      <br />
+      <br />
+      <input type="password" name="password" placeholder="password" />
+      <br />
+      <br />
+      <div>
+        <input type="radio" name="called-by" id="called-by1" / value="Mr">
+        <label for="called-by1">Mr</label>
+        <br />
+        <input type="radio" name="called-by" id="called-by2" / value="Mrs">
+        <label for="called-by2">Mrs</label>
+        <br />
+        <input type="radio" name="called-by" id="called-by3" / value="Mrsrs">
+        <label for="called-by3">Mrsrs</label>
+      </div>
+      <br />
+      <input type="checkbox" name="active" id="active" checked />
+      <label for="active">is active?</label>
+    </form>
+  </body>
+</html>
