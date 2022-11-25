@@ -1,0 +1,8 @@
+{
+  "python.analysis.typeCheckingMode": "strict",
+//   "editor.codeActionsOnSave": {
+//     "source.fixAll": false
+//   },
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true
+}
