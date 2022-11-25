@@ -1,8 +1,10 @@
 import { createReactRouter, createRouteConfig } from "@tanstack/react-router";
 import AuthLayout from "./layout/AuthLayout";
+import CreateCarPage from "./pages/CreateCar";
 import HomePage from "./pages/Home";
 import LoginPage from "./pages/Login";
 import RegisterPage from "./pages/Register";
+import RentedCars from "./pages/Rented";
 
 const routeConfig = createRouteConfig().createChildren((createRoute) => [
   createRoute({
@@ -21,6 +23,14 @@ const routeConfig = createRouteConfig().createChildren((createRoute) => [
   createRoute({
     path: "/",
     component: HomePage,
+  }),
+  createRoute({
+    path: "/rented",
+    component: RentedCars,
+  }),
+  createRoute({
+    path: "/create",
+    component: CreateCarPage,
   }),
 ]);
 

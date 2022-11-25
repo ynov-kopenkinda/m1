@@ -5,9 +5,9 @@ import { useAuth } from "../context/AuthContext";
 import useCars from "../hooks/useCars";
 import router from "../router";
 
-export default function HomePage() {
+export default function RentedCars() {
   const { loggedIn } = useAuth();
-  const { cars } = useCars(loggedIn === "yes");
+  const { cars } = useCars(loggedIn === "yes", true);
   const [search, setSearch] = useState("");
   if (loggedIn === "no") {
     return (
@@ -49,7 +49,7 @@ export default function HomePage() {
               `${car.brand} ${car.model}`.toLocaleLowerCase().includes(search)
           )
           .map((car) => (
-            <CarCard car={car} key={car.id} />
+            <CarCard car={car} key={car.id} rented />
           ))}
       </div>
     </div>

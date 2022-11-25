@@ -57,7 +57,7 @@ export default function LoginPage() {
         <label htmlFor="loginType">Type de compte</label>
         <select name="loginType" id="loginType" className="p-2 border rounded">
           <option value="admin">Admin</option>
-          <option value="user">User</option>
+          <option value="rider">User</option>
         </select>
       </div>
       <button

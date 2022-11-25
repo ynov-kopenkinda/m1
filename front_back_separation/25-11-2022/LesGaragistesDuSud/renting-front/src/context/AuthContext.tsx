@@ -2,6 +2,12 @@ import { createContext, ReactNode, useContext, useState } from "react";
 
 const API_URL = "http://localhost:8000/api";
 
+export type User = {
+  id: number;
+  first_name: string;
+  type: "admin" | "rider";
+};
+
 type TAuthContext =
   | (
       | {
@@ -11,11 +17,7 @@ type TAuthContext =
         }
       | {
           loggedIn: "yes";
-          user: {
-            id: number;
-            first_name: string;
-            type: "admin" | "rider";
-          };
+          user: User;
           token: string;
         }
     ) & {

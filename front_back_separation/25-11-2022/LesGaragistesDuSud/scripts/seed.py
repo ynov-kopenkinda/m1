@@ -48,6 +48,9 @@ def seed():
     rider2 = make_rider('2', 'F')
     make_rider('3', 'M')
     make_car(admin1, None)
+    make_car(admin2, None)
+    make_car(admin2, None)
+    make_car(admin1, None)
     make_car(admin1, rider1)
     make_car(admin2, rider2)
 

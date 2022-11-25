@@ -1,4 +1,11 @@
-import { IconLogin, IconLogout, IconUserPlus } from "@tabler/icons";
+import {
+  IconCar,
+  IconHome,
+  IconLogin,
+  IconLogout,
+  IconPlus,
+  IconUserPlus,
+} from "@tabler/icons";
 import { ReactNode } from "react";
 import { useAuth } from "../context/AuthContext";
 import router from "../router";
@@ -8,7 +15,12 @@ export default function DefaultLayout({ children }: { children: ReactNode }) {
   const { loggedIn, logout, user } = useAuth();
   return (
     <>
-      <nav className="sticky left-0 top-0 right-0 bg-white shadow-lg flex p-2 px-4 justify-end gap-2">
+      <nav className="sticky left-0 top-0 right-0 bg-white shadow-lg flex p-2 px-4 justify-end gap-2 items-center">
+        {loggedIn === "yes" ? (
+          <router.Link to="/" className="mr-auto">
+            <IconHome size={18} />
+          </router.Link>
+        ) : null}
         {loggedIn === "no" ? (
           <>
             <router.Link
@@ -31,6 +43,24 @@ export default function DefaultLayout({ children }: { children: ReactNode }) {
         {loggedIn === "yes" ? (
           <div className="flex items-center gap-2">
             <b>Hello, {user.first_name}!</b>
+            {user.type === "rider" ? (
+              <router.Link
+                to="/rented"
+                className="transition-all gap-2 flex items-center justify-center border text-blue-500 border-blue-500 rounded-md px-4 py-2 hover:bg-blue-500 hover:text-white"
+              >
+                Loués
+                <IconCar size={16} stroke={1.5} />
+              </router.Link>
+            ) : null}
+            {user.type === "admin" ? (
+              <router.Link
+                to="/create"
+                className="transition-all gap-2 flex items-center justify-center border text-blue-500 border-blue-500 rounded-md px-4 py-2 hover:bg-blue-500 hover:text-white"
+              >
+                Rajouter
+                <IconPlus size={16} stroke={1.5} />
+              </router.Link>
+            ) : null}
             <button
               onClick={logout}
               className="transition-all gap-2 flex items-center justify-center border text-red-500 border-red-500 rounded-md px-4 py-2 hover:bg-red-500 hover:text-white"

@@ -5,10 +5,11 @@ from rest_framework.request import Request
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework import status
 from jwt import encode
+from .secrets import JWT_KEY
 
-from .serializers import RiderSignupSerializer
-from .models import Rider, Admin
-from django.conf.global_settings import SECRET_KEY
+from .serializers import RiderSignupSerializer, CarSerializer
+from .models import Rider, Admin, Car
+from .middlewares import ensure_rider, ensure_admin
 # Create your views here.
 
 
@@ -45,7 +46,8 @@ class RiderApiView(ModelViewSet):
         user = {"id": rider.id, "first_name": rider.first_name, "type": "rider"}
         token = encode(
             user,
-            SECRET_KEY
+            JWT_KEY,
+            algorithm='HS256'
         )
         return Response({"token": token, "user": user}, status=status.HTTP_200_OK)
 
@@ -62,6 +64,66 @@ class AdminApiView(ModelViewSet):
         user = {"id": admin.id, "first_name": admin.first_name, "type": "admin"}
         token = encode(
             user,
-            SECRET_KEY
+            JWT_KEY,
+            algorithm='HS256'
         )
         return Response({"token": token, "user": user}, status=status.HTTP_200_OK)
+
+
+class CarApiView(ModelViewSet):
+    @action(detail=False, methods=['get'])
+    def get_all_cars(self, request: Request) -> Response:
+        user = ensure_rider(request)
+        if user is None:
+            return Response({'message': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        cars = Car.objects.filter(rented_by=None)
+        serializer = CarSerializer(cars, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'])
+    def get_all_cars_with_rented(self, request: Request) -> Response:
+        user = ensure_rider(request)
+        if user is None:
+            return Response({'message': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        cars = Car.objects.filter(rented_by=user)
+        serializer = CarSerializer(cars, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def rent_a_car(self, request: Request, pk: int) -> Response:
+        user = ensure_rider(request)
+        if user is None:
+            return Response({'message': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        car = Car.objects.get(id=pk)
+        if car.rented_by is not None:
+            return Response({'message': 'Car Already Rented'}, status=status.HTTP_400_BAD_REQUEST)
+        car.rented_by = user
+        car.save()
+        return Response({'message': 'Car Rented Successfully'}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unrent_a_car(self, request: Request, pk: int) -> Response:
+        user = ensure_rider(request)
+        if user is None:
+            return Response({'message': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        car = Car.objects.get(id=pk)
+        car.rented_by = None
+        car.save()
+        return Response({'message': 'Car Unrented Successfully'}, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['post'])
+    def add_a_car(self, request: Request) -> Response:
+        user = ensure_admin(request)
+        if user is None:
+            return Response({'message': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        data = request.data
+        car = Car.objects.create(
+            brand=data['brand'],
+            model=data['model'],
+            mileage=data['mileage'],
+            daily_price=data['daily_price'],
+            rented_by=None,
+            created_by=user
+        )
+        car.save()
+        return Response({'message': 'Car Added Successfully'}, status=status.HTTP_200_OK)
