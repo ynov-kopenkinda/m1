@@ -37,3 +37,7 @@ et 3 utilisateurs clients:
 | rider1 | rider1 |
 | rider2 | rider2 |
 | rider3 | rider3 |
+
+## Annexes
+
+Petite remarque, j'ai decidé d'utiliser une librarie pour le routing qui est en beta pour l'instant, du coup parfois le redirect se fait pas tout seul, il faut rafraichir la page pour que ca marche.

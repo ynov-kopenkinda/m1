@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const API_URL = "http://localhost:8000/api";
 
@@ -96,6 +102,24 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     token,
     register,
   } as TAuthContext;
+
+  useEffect(() => {
+    if (localStorage.getItem("auth")) {
+      const values = JSON.parse(localStorage.getItem("auth") as string);
+      setToken(values.token);
+      setUser(values.user);
+      setLoggedIn("yes");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn === "yes") {
+      localStorage.setItem("auth", JSON.stringify({ token, user }));
+    } else {
+      localStorage.removeItem("auth");
+    }
+  }, [token, user, loggedIn]);
+
   return <authCtx.Provider value={value}>{children}</authCtx.Provider>;
 };
 
