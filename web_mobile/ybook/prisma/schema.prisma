@@ -31,8 +31,8 @@ model User {
   firstname             String                @db.VarChar(100)
   lastname              String                @db.VarChar(100)
   email                 String                @unique
-  avatarS3Key           String                @db.VarChar(255)
-  coverPicS3Key         String                @db.VarChar(255)
+  avatarS3Key           String?                @db.VarChar(255)
+  coverPicS3Key         String?                @db.VarChar(255)
   posts                 Post[]
   postLikes             PostLike[]
   postComment           PostComment[]
@@ -43,6 +43,7 @@ model User {
   conversationsSent     Conversation[]        @relation("ConversationsSent")
   conversationsReceived Conversation[]        @relation("ConversationsReceived")
   conversationMessages  ConversationMessage[]
+  config                Json?
 }
 
 model Post {
