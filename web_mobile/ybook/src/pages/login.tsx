@@ -14,6 +14,9 @@ export default function LoginPage() {
       router.push(`/`);
     } catch (e) {
       if (e instanceof Error) {
+        if (e.message === "User is not verified") {
+          router.push(`/verify-code?email=${email}`);
+        }
         window.alert(e.message);
       } else {
         console.error(e);
@@ -54,7 +57,7 @@ export default function LoginPage() {
           />
         </div>
         <button type="submit" className="rounded-xs bg-blue-400 p-2 text-white">
-          Register
+          Log in
         </button>
         <div className="flex justify-between">
           <Link
