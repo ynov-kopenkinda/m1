@@ -17,40 +17,48 @@ export default function VerifyCodePage() {
   const { verifyEmail } = useAuthActions();
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        await verifyEmail(email, code);
-      }}
-      className="flex flex-col gap-4 p-4"
-    >
-      <div className="flex flex-col gap-2">
-        <label htmlFor="name">Email</label>
-        <input
-          className="border disabled:bg-gray-300"
-          type="email"
-          disabled={queryEmail != null && queryEmail !== ""}
-          name="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.currentTarget.value)}
-        />
-      </div>
-      <div className="flex flex-col gap-2">
-        <label htmlFor="surname">Surname</label>
-        <input
-          className="border"
-          type="number"
-          maxLength={6}
-          name="surname"
-          id="surname"
-          value={code}
-          onChange={(e) => setCode(e.currentTarget.value)}
-        />
-      </div>
-      <button type="submit" disabled={code.length !== 6}>
-        Finish registration
-      </button>
-    </form>
+    <div className="flex h-screen w-full flex-col items-center justify-center">
+      <h1 className="mb-2 text-2xl font-bold">Verify your auth code</h1>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await verifyEmail(email, code);
+        }}
+        className="flex w-full max-w-xs flex-col gap-4 rounded-md border p-4"
+      >
+        <div className="flex flex-col gap-2">
+          <label htmlFor="name">Email</label>
+          <input
+            className="rounded-xs border p-2 disabled:bg-gray-300"
+            type="email"
+            disabled={queryEmail != null && queryEmail !== ""}
+            name="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.currentTarget.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="surname">Surname</label>
+          <input
+            className="rounded-xs border p-2"
+            type="number"
+            maxLength={6}
+            name="surname"
+            id="surname"
+            value={code}
+            onChange={(e) => setCode(e.currentTarget.value)}
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="rounded-xs bg-blue-400 p-2 text-white disabled:bg-blue-200"
+          disabled={code.length !== 6}
+        >
+          Finish registration
+        </button>
+      </form>
+    </div>
   );
 }

@@ -12,7 +12,7 @@ export default function RegisterPage() {
   const { register } = useAuthActions();
   const handleSubmit = async () => {
     try {
-      const registeredEmail = await register(email, password, name, surname);
+      const registeredEmail = await register(name, surname, email, password);
       router.push(`/verify-code?email=${registeredEmail}`);
     } catch (e) {
       if (e instanceof Error) {
@@ -81,7 +81,10 @@ export default function RegisterPage() {
           Register
         </button>
         <div className="flex justify-between">
-          <Link href="/login" className="ml-auto text-xs underline text-blue-400">
+          <Link
+            href="/login"
+            className="ml-auto text-xs text-blue-400 underline"
+          >
             Already have an account? Log in instead
           </Link>
         </div>
