@@ -39,7 +39,7 @@ export default function VerifyCodePage() {
           />
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="surname">Surname</label>
+          <label htmlFor="surname">Verification code</label>
           <input
             className="rounded-xs border p-2"
             type="number"
