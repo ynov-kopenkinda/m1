@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const handleSubmit = async () => {
     try {
       const registeredEmail = await register(name, surname, email, password);
-      router.push(`/verify-code?email=${registeredEmail}`);
+      router.push(`/verify-code?email=${encodeURIComponent(registeredEmail)}`);
     } catch (e) {
       if (e instanceof Error) {
         window.alert(e.message);

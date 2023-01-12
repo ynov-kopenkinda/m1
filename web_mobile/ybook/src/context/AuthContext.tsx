@@ -52,23 +52,22 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
           Pool: userPool,
         };
         const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-        cognitoUser.authenticateUser(authenticationDetails, {
-          onSuccess(session, userConfirmationNecessary) {
-            if (userConfirmationNecessary) {
-              throw new Error("User is not confirmed");
-            }
-            const token = session.getIdToken().getJwtToken();
-            setState({
-              token,
-            });
-            console.log({
-              loggedIn: true,
-              token,
-            });
-          },
-          onFailure(err) {
-            throw err;
-          },
+        return new Promise((res, rej) => {
+          cognitoUser.authenticateUser(authenticationDetails, {
+            onSuccess(session, userConfirmationNecessary) {
+              if (userConfirmationNecessary) {
+                rej(new Error("User is not confirmed"));
+              }
+              const token = session.getIdToken().getJwtToken();
+              setState({
+                token,
+              });
+              res();
+            },
+            onFailure(err) {
+              rej(err);
+            },
+          });
         });
       },
       logout() {

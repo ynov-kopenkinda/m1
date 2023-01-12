@@ -561,6 +561,11 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
+aws-jwt-verify@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/aws-jwt-verify/-/aws-jwt-verify-3.3.0.tgz#c284c12a39659e1733eab5bf5a5fb4cf2b8c6c63"
+  integrity sha512-gb25clHLamaRXwJnKsW5d/0rEjCUErLsLekryzJYManQV0GfVuv9g8Q+BYeb2owycXvUOi/aqo5czkj3EPtJSg==
+
 aws-sdk@^2.6.0:
   version "2.1265.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1265.0.tgz#ec034b10126d7c81242b2501567cb4d5179a4e61"

@@ -22,7 +22,16 @@ export default function VerifyCodePage() {
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          await verifyEmail(email, code);
+          try {
+            await verifyEmail(email, code);
+            router.push("/login");
+          } catch (e) {
+            if (e instanceof Error) {
+              window.alert(e.message);
+            } else {
+              console.error(e);
+            }
+          }
         }}
         className="flex w-full max-w-xs flex-col gap-4 rounded-md border p-4"
       >
