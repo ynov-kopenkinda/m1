@@ -1,7 +1,7 @@
-import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { userPool } from "../aws/userPool";
+import { useAuthActions } from "../context/AuthContext";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -9,49 +9,34 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const handleSubmit = () => {
-    const attributeList = [
-      new AmazonCognitoIdentity.CognitoUserAttribute({
-        Name: "name",
-        Value: name,
-      }),
-      new AmazonCognitoIdentity.CognitoUserAttribute({
-        Name: "given_name",
-        Value: surname,
-      }),
-      new AmazonCognitoIdentity.CognitoUserAttribute({
-        Name: "email",
-        Value: email,
-      }),
-    ];
-    userPool.signUp(email, password, attributeList, [], (err, data) => {
-      if (err) {
-        console.error(err);
+  const { register } = useAuthActions();
+  const handleSubmit = async () => {
+    try {
+      const registeredEmail = await register(email, password, name, surname);
+      router.push(`/verify-code?email=${registeredEmail}`);
+    } catch (e) {
+      if (e instanceof Error) {
+        window.alert(e.message);
       } else {
-        data?.user.getUserAttributes((err, attrs) => {
-          router.push(
-            `/verify-code?email=${
-              attrs?.find((a) => a.Name === "email")?.Value
-            }`
-          );
-        });
+        console.error(e);
       }
-    });
+    }
   };
 
   return (
-    <>
+    <div className="flex h-screen w-full flex-col items-center justify-center">
+      <h1 className="mb-2 text-2xl font-bold">Register</h1>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
-        className={"flex flex-col gap-4 p-4"}
+        className="flex w-full max-w-xs flex-col gap-4 rounded-md border p-4"
       >
         <div className="flex flex-col gap-2">
           <label htmlFor="name">Name</label>
           <input
-            className="border"
+            className="rounded-xs border p-2"
             type="text"
             name="name"
             id="name"
@@ -62,7 +47,7 @@ export default function RegisterPage() {
         <div className="flex flex-col gap-2">
           <label htmlFor="surname">Surname</label>
           <input
-            className="border"
+            className="rounded-xs border p-2"
             type="text"
             name="surname"
             id="surname"
@@ -73,7 +58,7 @@ export default function RegisterPage() {
         <div className="flex flex-col gap-2">
           <label htmlFor="email">Email</label>
           <input
-            className="border"
+            className="rounded-xs border p-2"
             type="email"
             name="email"
             id="email"
@@ -84,7 +69,7 @@ export default function RegisterPage() {
         <div className="flex flex-col gap-2">
           <label htmlFor="password">Password</label>
           <input
-            className="border"
+            className="rounded-xs border p-2"
             type="password"
             name="password"
             id="password"
@@ -92,8 +77,15 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.currentTarget.value)}
           />
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="rounded-xs bg-blue-400 p-2 text-white">
+          Register
+        </button>
+        <div className="flex justify-between">
+          <Link href="/login" className="ml-auto text-xs underline text-blue-400">
+            Already have an account? Log in instead
+          </Link>
+        </div>
       </form>
-    </>
+    </div>
   );
 }

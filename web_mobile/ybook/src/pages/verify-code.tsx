@@ -1,7 +1,6 @@
-import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { userPool } from "../aws/userPool";
+import { useAuthActions } from "../context/AuthContext";
 
 export default function VerifyCodePage() {
   const router = useRouter();
@@ -15,26 +14,13 @@ export default function VerifyCodePage() {
     }
   }, [queryEmail, queryEmailCheck]);
   const [code, setCode] = useState("");
-  const userData = {
-    Username: email,
-    Pool: userPool,
-  };
-  const handleSubmit = () => {
-    const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-    cognitoUser.confirmRegistration(code, true, (err, result) => {
-      if (err) {
-        console.error(err);
-      } else {
-        console.log(result);
-      }
-    });
-  };
+  const { verifyEmail } = useAuthActions();
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        handleSubmit();
+        await verifyEmail(email, code);
       }}
       className="flex flex-col gap-4 p-4"
     >
