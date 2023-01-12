@@ -3,6 +3,7 @@ import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
 import { useMemo, useContext, createContext } from "react";
 import { userPool } from "../aws/userPool";
 import { useSessionStorageState } from "ahooks";
+import { trpc } from "../utils/trpc";
 
 type AuthState = {
   token: string | undefined;
@@ -38,6 +39,7 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
   const [state, setState] = useSessionStorageState<AuthState>("ybook-auth", {
     defaultValue: defaultAuthContext,
   });
+  const { mutateAsync } = trpc.auth.createUser.useMutation();
   const authActions: AuthFunctions = useMemo(
     () => ({
       async login(email, password) {
@@ -62,7 +64,7 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
               setState({
                 token,
               });
-              res();
+              mutateAsync().then(() => res());
             },
             onFailure(err) {
               rej(err);
@@ -116,7 +118,7 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
         });
       },
     }),
-    [setState]
+    [mutateAsync, setState]
   );
   return (
     <authContext.Provider value={state}>
