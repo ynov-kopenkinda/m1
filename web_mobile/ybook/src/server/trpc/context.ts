@@ -40,18 +40,22 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (opts: CreateNextContextOptions) => {
-  const { req } = opts;
-  if (!req.headers.authorization) {
+  try {
+    const { req } = opts;
+    if (!req.headers.authorization) {
+      throw new Error("No authorization header");
+    }
+    const token = req.headers.authorization.slice("Bearer ".length);
+    const session = await verifier.verify(token);
+    const sessionData = {
+      name: session.name as string,
+      surname: session.given_name as string,
+      email: session.email as string,
+    };
+    return await createContextInner({ session: sessionData });
+  } catch (e) {
     return await createContextInner({});
   }
-  const token = req.headers.authorization.slice("Bearer ".length);
-  const session = await verifier.verify(token);
-  const sessionData = {
-    name: session.name as string,
-    surname: session.given_name as string,
-    email: session.email as string,
-  };
-  return await createContextInner({ session: sessionData });
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;

@@ -1,11 +1,8 @@
 import { type NextPage } from "next";
-import useToken from "../hooks/useToken";
-import { trpc } from "../utils/trpc";
+import ProtectedLayout from "../components/layout/ProtectedLayout";
 
 const Home: NextPage = () => {
-  useToken();
-  const { data } = trpc.example.hello.useQuery();
-  return <>{data?.greeting}</>;
+  return <ProtectedLayout>Hi</ProtectedLayout>;
 };
 
 export default Home;

@@ -24,17 +24,16 @@ export const trpc = createTRPCNext<AppRouter>({
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
           headers() {
-            const { token } = JSON.parse(
-              sessionStorage.getItem("ybook-auth") || ""
-            );
-            if (!token) return {};
+            const authData = JSON.parse(
+              String(sessionStorage.getItem("ybook-auth")) || ""
+            ) as { token: string | undefined } | null;
+            if (authData?.token === undefined) return {};
             return {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${authData?.token}`,
             };
           },
         }),
       ],
-      abortOnUnmount: true,
     };
   },
   ssr: false,

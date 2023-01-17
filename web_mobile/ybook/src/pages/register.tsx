@@ -3,6 +3,20 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useAuthActions } from "../context/AuthContext";
 
+const PwdCheck = ({
+  text,
+  condition,
+}: {
+  text: string;
+  condition: boolean;
+}) => (
+  <li>
+    <span className={condition ? "text-green-400" : "text-red-400"}>
+      {text}
+    </span>
+  </li>
+);
+
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -10,6 +24,16 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
   const { register } = useAuthActions();
+  const passwordChecks = {
+    length: password.length >= 8 && password.length <= 20,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[!@#$%^&*]/.test(password),
+  };
+  const passwordCheckPasses =
+    Object.values(passwordChecks).filter((v) => v).length ===
+    Object.values(passwordChecks).length;
   const handleSubmit = async () => {
     try {
       const registeredEmail = await register(name, surname, email, password);
@@ -76,8 +100,36 @@ export default function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.currentTarget.value)}
           />
+          {password.length > 0 && (
+            <ul>
+              <PwdCheck
+                condition={passwordChecks.length}
+                text="Between 8 and 20 characters"
+              />
+              <PwdCheck
+                condition={passwordChecks.uppercase}
+                text="At least 1 uppercase letter"
+              />
+              <PwdCheck
+                condition={passwordChecks.lowercase}
+                text="At least 1 lowercase letter"
+              />
+              <PwdCheck
+                condition={passwordChecks.number}
+                text="At least 1 number"
+              />
+              <PwdCheck
+                condition={passwordChecks.special}
+                text="At least 1 special character"
+              />
+            </ul>
+          )}
         </div>
-        <button type="submit" className="rounded-xs bg-blue-400 p-2 text-white">
+        <button
+          type="submit"
+          className="rounded-xs bg-blue-400 p-2 text-white disabled:bg-blue-300"
+          disabled={!passwordCheckPasses}
+        >
           Register
         </button>
         <div className="flex justify-between">
