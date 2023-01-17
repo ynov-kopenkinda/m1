@@ -7,10 +7,12 @@ import { trpc } from "../utils/trpc";
 
 type AuthState = {
   token: string | undefined;
+  email: string | undefined;
 };
 
 const defaultAuthContext: AuthState = {
   token: undefined,
+  email: undefined,
 };
 
 type AuthFunctions = {
@@ -23,6 +25,12 @@ type AuthFunctions = {
     password: string
   ): Promise<string>;
   verifyEmail(email: string, code: string): Promise<unknown>;
+  requestVerificationCode(email: string): Promise<unknown>;
+  updatePassword(
+    email: string,
+    code: string,
+    newPassword: string
+  ): Promise<unknown>;
 };
 
 const defaultAuthActions: AuthFunctions = {
@@ -30,6 +38,8 @@ const defaultAuthActions: AuthFunctions = {
   logout: () => undefined,
   register: async () => "",
   verifyEmail: async () => undefined,
+  requestVerificationCode: async () => undefined,
+  updatePassword: async () => undefined,
 } as const;
 
 const authContext = createContext<AuthState>(defaultAuthContext);
@@ -39,10 +49,10 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
   const [state, setState] = useSessionStorageState<AuthState>("ybook-auth", {
     defaultValue: defaultAuthContext,
   });
-  const { mutateAsync } = trpc.auth.createUser.useMutation();
+  const { mutateAsync: createUser } = trpc.auth.createUser.useMutation();
   const authActions: AuthFunctions = useMemo(
     () => ({
-      async login(email, password) {
+      login(email, password) {
         const authenticationData = {
           Username: email,
           Password: password,
@@ -63,8 +73,9 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
               const token = session.getIdToken().getJwtToken();
               setState({
                 token,
+                email,
               });
-              mutateAsync().then(() => res());
+              createUser().then(() => res());
             },
             onFailure(err) {
               rej(err);
@@ -73,6 +84,13 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
         });
       },
       logout() {
+        if (state.email !== undefined) {
+          const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+            Username: state.email,
+            Pool: userPool,
+          });
+          cognitoUser.signOut();
+        }
         setState(defaultAuthContext);
       },
       async register(name, surname, email, password) {
@@ -101,7 +119,7 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
         });
         return email;
       },
-      async verifyEmail(email, code) {
+      verifyEmail(email, code) {
         const userData = {
           Username: email,
           Pool: userPool,
@@ -117,8 +135,40 @@ export default function AuthProvider({ children }: PropsWithChildren<unknown>) {
           });
         });
       },
+      requestVerificationCode(email) {
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+          Username: email,
+          Pool: userPool,
+        });
+        return new Promise((res, rej) => {
+          cognitoUser.forgotPassword({
+            onSuccess(data) {
+              res(data);
+            },
+            onFailure(err) {
+              rej(err);
+            },
+          });
+        });
+      },
+      updatePassword(email, code, newPassword) {
+        const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
+          Username: email,
+          Pool: userPool,
+        });
+        return new Promise((res, rej) => {
+          cognitoUser.confirmPassword(code, newPassword, {
+            onSuccess() {
+              res(undefined);
+            },
+            onFailure(err) {
+              rej(err);
+            },
+          });
+        });
+      },
     }),
-    [mutateAsync, setState]
+    [createUser, setState, state.email]
   );
   return (
     <authContext.Provider value={state}>

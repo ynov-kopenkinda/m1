@@ -16,7 +16,7 @@ export default function ProtectedLayout({
       </div>
     );
   }
-  if (error !== undefined) {
+  if (error != null) {
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center">
         <div className="flex w-56 flex-col items-center justify-center rounded-md border p-4">

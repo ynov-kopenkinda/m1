@@ -5,8 +5,16 @@ export const authRouter = router({
     return ctx.session;
   }),
   createUser: protecetedProcedure.mutation(async ({ ctx }) => {
-    return await ctx.prisma.user.create({
-      data: {
+    return await ctx.prisma.user.upsert({
+      where: {
+        email: ctx.session.email,
+      },
+      create: {
+        email: ctx.session.email,
+        firstname: ctx.session.name,
+        lastname: ctx.session.surname,
+      },
+      update: {
         email: ctx.session.email,
         firstname: ctx.session.name,
         lastname: ctx.session.surname,
