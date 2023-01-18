@@ -12,7 +12,7 @@ const verifier = CognitoJwtVerifier.create({
 
 import { prisma } from "../db/client";
 
-type SessionData = {
+export type SessionData = {
   name: string;
   surname: string;
   email: string;

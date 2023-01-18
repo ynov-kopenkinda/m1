@@ -155,7 +155,7 @@ export default function LoginPage() {
         {step === "getting-email" ? (
           <div className="flex justify-between">
             <Link
-              href="/register"
+              href="/login"
               className="ml-auto text-xs text-blue-400 underline"
             >
               Log in instead

@@ -8,7 +8,7 @@ export default function ProtectedLayout({
   children,
 }: PropsWithChildren<unknown>) {
   const [session, error] = useSession();
-  if (!session && error === undefined) {
+  if (!session && error == null) {
     return (
       <div className="flex h-screen w-screen flex-col items-center justify-center">
         <IconFidgetSpinner className="animate-spin" />
