@@ -1,8 +1,10 @@
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import type { NodeHTTPCreateContextFnOptions } from "@trpc/server/dist/adapters/node-http/types.js";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
-import type { CognitoIdTokenPayload } from "aws-jwt-verify/jwt-model.js";
-import { env } from "../../env/server.mjs";
+import type { IncomingMessage } from "http";
+import type ws from "ws";
+import { env } from "../../env/server.cjs";
 
 const verifier = CognitoJwtVerifier.create({
   userPoolId: env.NEXT_PUBLIC_COGNITO_USERPOOL_ID,
@@ -39,7 +41,11 @@ export const createContextInner = async (opts: CreateContextOptions) => {
  * This is the actual context you'll use in your router
  * @link https://trpc.io/docs/context
  **/
-export const createContext = async (opts: CreateNextContextOptions) => {
+export const createContext = async (
+  opts:
+    | CreateNextContextOptions
+    | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
+) => {
   try {
     const { req } = opts;
     if (!req.headers.authorization) {
