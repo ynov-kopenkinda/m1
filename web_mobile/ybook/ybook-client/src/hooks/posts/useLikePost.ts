@@ -16,6 +16,7 @@ export const useLikePost = (postId: number) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries(["/posts"]);
+        queryClient.invalidateQueries([`/posts/${postId}`]);
       },
     }
   );

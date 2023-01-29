@@ -5,6 +5,7 @@ import { type Post } from "../../hooks/posts/usePosts";
 import cx from "classnames";
 import { useSession } from "../../hooks/auth/useSession";
 import { useLikePost } from "../../hooks/posts/useLikePost";
+import { Link } from "react-router-dom";
 
 export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
   ({ post }, ref) => {
@@ -39,13 +40,16 @@ export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
             />
             {post.postLikes.length}
           </button>
-          <button className="text-md flex items-center py-2 pl-2">
+          <Link
+            to={`/post/${post.id}`}
+            className="text-md flex items-center py-2 pl-2"
+          >
             <IconMessage
               stroke={1}
               className={cx({ "fill-slate-700 text-slate-700": hasMyComments })}
             />{" "}
             {post.postComments.length}
-          </button>
+          </Link>
         </div>
       </div>
     );
