@@ -1,5 +1,5 @@
 import * as AmazonCognitoIdentity from "amazon-cognito-identity-js";
-import { env } from "../env/client.cjs";
+import { env } from "../env/client.mjs";
 
 export const userPool = new AmazonCognitoIdentity.CognitoUserPool({
   ClientId: env.NEXT_PUBLIC_COGNITO_CLIENT_ID,

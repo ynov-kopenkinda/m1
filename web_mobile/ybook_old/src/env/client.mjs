@@ -1,10 +1,9 @@
 // @ts-check
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { clientEnv, clientSchema } = require("./schema.cjs");
+import { clientEnv, clientSchema } from "./schema.mjs";
 
 const _clientEnv = clientSchema.safeParse(clientEnv);
 
-const formatErrors = (
+export const formatErrors = (
   /** @type {import('zod').ZodFormattedError<Map<string,string>,string>} */
   errors
 ) =>
@@ -33,7 +32,4 @@ for (let key of Object.keys(_clientEnv.data)) {
   }
 }
 
-module.exports = {
-  formatErrors,
-  env: _clientEnv.data,
-};
+export const env = clientEnv;

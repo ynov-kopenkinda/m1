@@ -3,10 +3,8 @@
  * This file is included in `/next.config.mjs` which ensures the app isn't built with invalid env vars.
  * It has to be a `.mjs`-file to be imported there.
  */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { serverSchema } = require("./schema.cjs");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { formatErrors, env: clientEnv } = require("./client.cjs");
+import { serverSchema } from "./schema.mjs";
+import { formatErrors, env as clientEnv } from "./client.mjs";
 
 const _serverEnv = serverSchema.safeParse(process.env);
 
@@ -26,4 +24,4 @@ for (let key of Object.keys(_serverEnv.data)) {
   }
 }
 
-exports.env = { ..._serverEnv.data, ...clientEnv };
+export const env = { ..._serverEnv.data, ...clientEnv };
