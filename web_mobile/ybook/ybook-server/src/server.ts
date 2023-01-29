@@ -1,4 +1,6 @@
 import * as express from "express";
+import helmet from "helmet";
+import * as cors from "cors";
 import * as http from "http";
 import { Server } from "socket.io";
 import { env } from "./env";
@@ -16,6 +18,12 @@ export const startServer = () => {
     });
   });
 
+  app.use(helmet());
+  app.use(
+    cors({
+      origin: env.CLIENT_APP_URL,
+    })
+  );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api", appRouter);

@@ -20,6 +20,7 @@ const schema = z.object({
   COGNITO_CLIENT_ID: z.string().min(1),
   COGNITO_USERPOOL_ID: z.string().min(1),
   DATABASE_URL: z.string().url(),
+  CLIENT_APP_URL: z.string().url(),
 });
 
 const _env = schema.safeParse(process.env);
