@@ -1,8 +1,8 @@
-import {
-  createHashRouter, RouterProvider
-} from "react-router-dom";
-import { RequiresAuth } from './components/auth/RequiresAuth';
+import { createHashRouter, RouterProvider } from "react-router-dom";
+import { RequiresAuth } from "./components/auth/RequiresAuth";
+import { AppLayout } from "./components/default/Layout";
 import ForgotPasswordPage from "./pages/forgot-password";
+import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
 import RegisterPage from "./pages/register";
 import VerifyCodePage from "./pages/verify-code";
@@ -10,7 +10,7 @@ import VerifyCodePage from "./pages/verify-code";
 const router = createHashRouter([
   {
     element: <RequiresAuth />,
-    children: [{ path: "/", element: <div>Home</div> }],
+    children: [{ path: "/", element: <HomePage /> }],
   },
   {
     path: "/login",
@@ -30,7 +30,11 @@ const router = createHashRouter([
   },
   {
     path: "*",
-    element: <div>404</div>,
+    element: (
+      <AppLayout>
+        <h1 className="mt-20 text-center text-8xl font-black">404</h1>
+      </AppLayout>
+    ),
   },
 ]);
 

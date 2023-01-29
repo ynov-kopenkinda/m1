@@ -17,14 +17,21 @@ export const isAuthed: (error: boolean) => RequestHandler =
       }
       return next();
     }
-    const session = await verifier.verify(token);
-    const sessionData = {
-      name: session.name as string,
-      surname: session.given_name as string,
-      email: session.email as string,
-    };
-    res.locals.session = sessionData;
-    return next();
+    try {
+      const session = await verifier.verify(token);
+      const sessionData = {
+        name: session.name as string,
+        surname: session.given_name as string,
+        email: session.email as string,
+      };
+      res.locals.session = sessionData;
+      return next();
+    } catch (e) {
+      if (error) {
+        return res.status(401).send("Unauthorized");
+      }
+      return next();
+    }
   };
 
 export const getSession = (res: Response) => {

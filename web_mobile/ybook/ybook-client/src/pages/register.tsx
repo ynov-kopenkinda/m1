@@ -1,7 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import PwdCheck from "../components/auth/PwdCheck";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../aws/cognito";
+import PwdCheck from "../components/auth/PwdCheck";
+import { useCreateUser } from "../hooks/auth/useCreateUser";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");

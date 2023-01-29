@@ -2,16 +2,19 @@ import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { login } from "../aws/cognito";
 import { useAuthActions } from "../store/auth.store";
+import { useCreateUser } from "../hooks/auth/useCreateUser";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const createUser = useCreateUser();
   const { authenticate } = useAuthActions();
   const handleSubmit = async () => {
     try {
       const token = await login({ email, password });
       authenticate({ email, token });
+      await createUser();
       navigate(`/`);
     } catch (e) {
       if (e instanceof Error) {

@@ -8,7 +8,7 @@ authRouter.get("/session", isAuthed(false), (req, res) => {
   return res.json({ session: res.locals.session ?? null });
 });
 
-authRouter.get("/createUser", isAuthed(true), async (_, res) => {
+authRouter.post("/createUser", isAuthed(true), async (_, res) => {
   const session = getSession(res);
   const user = await prisma.user.upsert({
     where: {

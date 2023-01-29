@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router";
-import { useSession } from "../../hooks/useSession";
+import { useSession } from "../../hooks/auth/useSession";
+import { AppLayout } from "../default/Layout";
 
 export const RequiresAuth = () => {
   const { status, data } = useSession();
@@ -9,5 +10,9 @@ export const RequiresAuth = () => {
   if (status === "loading") {
     return <div>Loading...</div>;
   }
-  return <Outlet context={{ session: data }} />;
+  return (
+    <AppLayout>
+      <Outlet context={{ session: data }} />
+    </AppLayout>
+  );
 };

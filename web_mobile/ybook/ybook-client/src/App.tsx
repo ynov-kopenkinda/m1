@@ -1,9 +1,31 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryFunction,
+} from "@tanstack/react-query";
+import { env } from "./env";
 import AppRouter from "./router";
-
-const queryClient = new QueryClient();
+import { useAuth } from "./store/auth.store";
 
 function App() {
+  const { token } = useAuth();
+
+  const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
+    return fetch(env.REACT_APP_BACKEND_URL + queryKey, {
+      headers: {
+        Authorization: `Bearer ${token}` ?? "",
+      },
+    }).then((res) => res.json().catch(() => null));
+  };
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        queryFn: defaultQueryFn,
+      },
+    },
+  });
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppRouter />
