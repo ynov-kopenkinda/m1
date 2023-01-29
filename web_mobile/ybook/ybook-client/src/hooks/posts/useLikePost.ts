@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { env } from "../../env";
 import { useAuth } from "../../store/auth.store";
+import { USE_POST_KEY } from "./usePost";
+import { USE_POSTS_KEY } from "./usePosts";
 
 export const useLikePost = (postId: number) => {
   const { token } = useAuth();
@@ -15,8 +17,8 @@ export const useLikePost = (postId: number) => {
       }).then((res) => res.json()),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["/posts"]);
-        queryClient.invalidateQueries([`/posts/${postId}`]);
+        queryClient.invalidateQueries([USE_POSTS_KEY()]);
+        queryClient.invalidateQueries([USE_POST_KEY(postId)]);
       },
     }
   );

@@ -42,6 +42,8 @@ export interface User {
   config: null;
 }
 
+export const USE_POSTS_KEY = () => `/posts`;
+
 export const usePosts = () => {
   const { token } = useAuth();
   const fetchPosts = async ({ pageParam = 1 }) =>
@@ -56,7 +58,7 @@ export const usePosts = () => {
     hasNextPage,
     isFetchingNextPage,
     isInitialLoading,
-  } = useInfiniteQuery<PostsResponse>(["/posts"], fetchPosts, {
+  } = useInfiniteQuery<PostsResponse>([USE_POSTS_KEY()], fetchPosts, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.page < lastPage.pages) return lastPage.page + 1;
       return false;

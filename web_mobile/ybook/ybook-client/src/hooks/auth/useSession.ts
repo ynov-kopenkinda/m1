@@ -20,9 +20,11 @@ type SessionResult =
       data: undefined;
     };
 
+export const USE_SESSION_KEY = () => "/auth/session";
+
 export function useSession(): SessionResult {
   const { data, isInitialLoading } = useQuery<{ session: SessionData }>([
-    "/auth/session",
+    USE_SESSION_KEY(),
   ]);
   if (data === undefined || isInitialLoading) {
     return { status: "loading", data: undefined };

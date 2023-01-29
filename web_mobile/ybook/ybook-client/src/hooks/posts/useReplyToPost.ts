@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { env } from "../../env";
 import { useAuth } from "../../store/auth.store";
+import { USE_POST_KEY } from "./usePost";
+import { USE_POSTS_KEY } from "./usePosts";
 
 export function useReplyToPost(postId: number) {
   const queryClient = useQueryClient();
@@ -18,9 +20,8 @@ export function useReplyToPost(postId: number) {
     },
     {
       onSuccess: async () => {
-        await queryClient.invalidateQueries(["posts"]);
-        await queryClient.invalidateQueries([`posts/${postId}`]);
-        console.log("invalidated");
+        await queryClient.invalidateQueries([USE_POSTS_KEY()]);
+        await queryClient.invalidateQueries([USE_POST_KEY(postId)]);
       },
     }
   );
