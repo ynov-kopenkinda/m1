@@ -37,6 +37,21 @@ postsRouter.get("/", isAuthed(true), async (req, res) => {
   });
 });
 
+postsRouter.post("/", isAuthed(true), async (req, res) => {
+  const session = getSession(res);
+  const { content } = req.body;
+  if (typeof content !== "string") {
+    return res.status(400).send("Content must be a string");
+  }
+  const post = await prisma.post.create({
+    data: {
+      htmlContent: content,
+      user: { connect: { email: session.email } },
+    },
+  });
+  return res.json(post);
+});
+
 postsRouter.get("/:postId", isAuthed(true), async (req, res) => {
   const postId = parseInt(req.params.postId);
   if (Number.isNaN(postId)) {

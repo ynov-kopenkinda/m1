@@ -1,15 +1,14 @@
 import { IconHeart, IconMessage } from "@tabler/icons-react";
+import cx from "classnames";
 import DOMPurify from "dompurify";
 import { Navigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
 import { Loader } from "../components/auth/Loader";
+import { ReplyToPost } from "../components/posts/ReplyToPost";
 import { useSession } from "../hooks/auth/useSession";
 import { useLikePost } from "../hooks/posts/useLikePost";
 import { usePost } from "../hooks/posts/usePost";
-import cx from "classnames";
-import { ReplyToPost } from "../components/posts/ReplyToPost";
 
-export function PostPage() {
+export default function PostPage() {
   const { id: _id } = useParams();
   const id = parseInt(_id as string);
   const { isLoading, post } = usePost(Number.isNaN(id) ? undefined : id);

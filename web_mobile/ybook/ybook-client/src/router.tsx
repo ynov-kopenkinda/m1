@@ -4,7 +4,8 @@ import { AppLayout } from "./components/default/Layout";
 import ForgotPasswordPage from "./pages/forgot-password";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
-import { PostPage } from "./pages/post";
+import NewPostPage from "./pages/new-post";
+import PostPage from "./pages/post";
 import RegisterPage from "./pages/register";
 import VerifyCodePage from "./pages/verify-code";
 
@@ -16,6 +17,10 @@ const router = createHashRouter([
       {
         path: "/post/:id",
         element: <PostPage />,
+      },
+      {
+        path: "/new-post",
+        element: <NewPostPage />,
       },
     ],
   },
