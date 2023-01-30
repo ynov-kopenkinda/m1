@@ -21,6 +21,10 @@ const schema = z.object({
   COGNITO_USERPOOL_ID: z.string().min(1),
   DATABASE_URL: z.string().url(),
   CLIENT_APP_URL: z.string().url(),
+  AWS_S3_ACCESS_KEY_ID: z.string(),
+  AWS_S3_SECRET_ACCESS_KEY: z.string(),
+  AWS_S3_REGION: z.string(),
+  AWS_S3_BUCKET_NAME: z.string(),
 });
 
 const _env = schema.safeParse(process.env);

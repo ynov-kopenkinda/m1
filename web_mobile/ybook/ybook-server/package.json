@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.259.0",
+    "@aws-sdk/s3-request-presigner": "^3.259.0",
     "@prisma/client": "^4.9.0",
     "aws-jwt-verify": "^3.4.0",
     "cors": "^2.8.5",
