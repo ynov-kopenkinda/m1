@@ -1,9 +1,11 @@
 import { useProfilePopup } from "../../store/profile.store";
 import cx from "classnames";
 import { Avatar } from "./Avatar";
+import { useSession } from "../../hooks/auth/useSession";
 
 export function ProfilePreview() {
   const { close, user } = useProfilePopup();
+  const { data: session } = useSession();
   return (
     <>
       <div
@@ -32,6 +34,9 @@ export function ProfilePreview() {
             <h1 className="text-2xl font-black">
               {user.firstname} {user.lastname}
             </h1>
+            <p className="text-gray-400">
+              {user.email} {user.email === session?.email && "(You)"}
+            </p>
           </>
         )}
       </div>
