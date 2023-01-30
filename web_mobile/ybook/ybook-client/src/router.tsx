@@ -8,6 +8,7 @@ import LoginPage from "./pages/login";
 import NewPostPage from "./pages/new-post";
 import PostPage from "./pages/post";
 import RegisterPage from "./pages/register";
+import SettingsPage from "./pages/settings";
 import VerifyCodePage from "./pages/verify-code";
 
 const router = createHashRouter([
@@ -26,6 +27,10 @@ const router = createHashRouter([
       {
         path: "/friends",
         element: <FriendsPage />,
+      },
+      {
+        path: "/settings",
+        element: <SettingsPage />,
       },
     ],
   },

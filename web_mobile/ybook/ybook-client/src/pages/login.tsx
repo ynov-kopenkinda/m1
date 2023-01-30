@@ -1,8 +1,9 @@
-import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
+import { flushSync } from "react-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../aws/cognito";
-import { useAuthActions } from "../store/auth.store";
 import { useCreateUser } from "../hooks/auth/useCreateUser";
+import { useAuthActions } from "../store/auth.store";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,9 @@ export default function LoginPage() {
   const handleSubmit = async () => {
     try {
       const token = await login({ email, password });
-      authenticate({ email, token });
+      flushSync(() => {
+        authenticate({ email, token });
+      });
       await createUser();
       navigate(`/`);
     } catch (e) {
