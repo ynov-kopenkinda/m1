@@ -29,7 +29,7 @@ export function ProfilePreview() {
         ) : (
           <>
             <div className="absolute left-1/2 top-0 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 bg-white">
-              <Avatar user={user} className="h-24 w-24" />
+              <Avatar user={user} className="h-full w-full" />
             </div>
             <h1 className="text-2xl font-black">
               {user.firstname} {user.lastname}

@@ -70,6 +70,18 @@ const router = createHashRouter([
   },
 ]);
 
+// Weird ass transition implementation lmao
+router.subscribe((location) => {
+  const root = document.querySelector("#root > main") as HTMLDivElement;
+  if (!root) return;
+  root.classList.add("opacity-0");
+  root.classList.remove("opacity-100", "transition-opacity", "duration-500");
+  setTimeout(() => {
+    root.classList.add("opacity-100", "transition-opacity", "duration-500");
+    root.classList.remove("opacity-0");
+  }, 0);
+});
+
 const AppRouter = () => {
   return <RouterProvider router={router} />;
 };
