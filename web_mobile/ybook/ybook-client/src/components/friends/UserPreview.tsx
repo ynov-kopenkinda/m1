@@ -1,4 +1,4 @@
-import type { User } from "../../hooks/posts/usePosts";
+import { User } from "../../api/api.types";
 import { useProfilePopup } from "../../store/profile.store";
 import { Avatar } from "../default/Avatar";
 

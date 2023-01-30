@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { User } from "../hooks/posts/usePosts";
+import { User } from "../api/api.types";
 
 interface ProfileStore {
   user: User | null;

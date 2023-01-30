@@ -1,9 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "../posts/usePosts";
+import { api } from '../../api';
 
-export const SUGGESTED_FRIENDS_KEY = () => "/friends/suggested";
+export const USE_SUGGESTED_FRIENDS_KEY = "USE_SUGGESTED_FRIENDS";
 
 export const useSuggestedFriends = () => {
-  const { data, isLoading } = useQuery<User[]>([SUGGESTED_FRIENDS_KEY()]);
+  const { data, isLoading } = useQuery(
+    [USE_SUGGESTED_FRIENDS_KEY],
+    async () => {
+      const [data, error] = await api.friends.getSuggested();
+      if (error) {
+        throw error;
+      }
+      return data;
+    }
+  );
   return [data, isLoading] as const;
 };

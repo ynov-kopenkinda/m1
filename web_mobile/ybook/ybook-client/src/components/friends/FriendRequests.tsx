@@ -1,7 +1,7 @@
 import { IconUserPlus } from "@tabler/icons-react";
+import { User } from "../../api/api.types";
 import { useFriendRequests } from "../../hooks/friends/useFriendRequests";
 import { useSendFriendRequest } from "../../hooks/friends/useSendFriendRequest";
-import { User } from "../../hooks/posts/usePosts";
 import { Avatar } from "../default/Avatar";
 import { CenterLoader } from "../default/Loader";
 
@@ -30,7 +30,7 @@ function FriendRequest({ from }: { from: User }) {
           <strong className="font-bold">{fullname}</strong>
           <button
             className="flex items-center justify-center rounded-md border border-green-600 py-1 text-green-600"
-            onClick={() => sendFriendRequest(from.email)}
+            onClick={() => sendFriendRequest({ email: from.email })}
           >
             <IconUserPlus size={16} />
           </button>

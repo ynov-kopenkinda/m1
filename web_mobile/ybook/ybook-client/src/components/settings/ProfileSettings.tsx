@@ -1,14 +1,12 @@
 import { IconUpload } from "@tabler/icons-react";
-import { env } from "../../env";
+import { api } from "../../api";
 import { useSession } from "../../hooks/auth/useSession";
 import { useChangeAvatar } from "../../hooks/users/useChangeAvatar";
-import { useAuth } from "../../store/auth.store";
 import { Avatar } from "../default/Avatar";
 import { CenterLoader } from "../default/Loader";
 
 export function ProfileSettings() {
   const { data: session } = useSession();
-  const { token } = useAuth();
   const updateAvatarKey = useChangeAvatar();
 
   if (session == null) return <CenterLoader />;
@@ -18,31 +16,21 @@ export function ProfileSettings() {
     input.type = "file";
     input.accept = "image/*";
     input.click();
-    input.onchange = (e) => {
+    input.onchange = async (e) => {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file == null) return;
-      (async () => {
-        const res = await fetch(
-          `${env.REACT_APP_BACKEND_URL}/s3upload/upload`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const { url, key } = (await res.json()) as { url: string; key: string };
-        const uploadRes = await fetch(url, {
-          method: "PUT",
-          body: file,
-          headers: {
-            "Content-Type": file.type,
-            // Authorization: `Bearer ${token}`,
-          },
-        });
-        if (uploadRes.status === 200) {
-          await updateAvatarKey(key);
-        }
-      })();
+      const [s3uploadResponse, error] = await api.s3.getUploadUrl();
+      if (error !== null) return;
+      const uploadRes = await fetch(s3uploadResponse.url, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+      if (uploadRes.status === 200) {
+        await updateAvatarKey(s3uploadResponse.key);
+      }
     };
   };
 

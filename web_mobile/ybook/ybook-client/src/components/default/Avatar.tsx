@@ -1,9 +1,9 @@
-import { User } from "../../hooks/posts/usePosts";
 import { createAvatar } from "@dicebear/core";
 import { croodlesNeutral } from "@dicebear/collection";
 import { DetailedHTMLProps, forwardRef, HTMLAttributes } from "react";
 import cx from "classnames";
 import { useS3Image } from "../../hooks/users/useS3Image";
+import { User } from "../../api/api.types";
 
 export const Avatar = forwardRef<
   HTMLImageElement,

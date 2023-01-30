@@ -1,4 +1,4 @@
-import { User } from "../../hooks/posts/usePosts";
+import { User } from "../../api/api.types";
 import { CenterLoader } from "../default/Loader";
 import { UserPreview } from "./UserPreview";
 

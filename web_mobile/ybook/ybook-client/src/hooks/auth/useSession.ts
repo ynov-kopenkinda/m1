@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "../posts/usePosts";
+import { User } from "../../api/api.types";
 
 type SessionData = {
   name: string;
@@ -28,6 +28,7 @@ export function useSession(): SessionResult {
   const { data, isInitialLoading } = useQuery<{ session: SessionData }>([
     USE_SESSION_KEY(),
   ]);
+
   if (data === undefined || isInitialLoading) {
     return { status: "loading", data: undefined };
   }

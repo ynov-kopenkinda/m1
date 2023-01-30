@@ -8,7 +8,7 @@ export interface AuthStore {
   deauthenticate: () => void;
 }
 
-const useAuthStore = create(
+export const authStore = create(
   persist<AuthStore>(
     (set) => ({
       token: undefined,
@@ -24,13 +24,13 @@ const useAuthStore = create(
 );
 
 export const useAuth = () => {
-  const token = useAuthStore((state) => state.token);
-  const email = useAuthStore((state) => state.email);
+  const token = authStore((state) => state.token);
+  const email = authStore((state) => state.email);
   return { token, email };
 };
 
 export const useAuthActions = () => {
-  const authenticate = useAuthStore((state) => state.authenticate);
-  const deauthenticate = useAuthStore((state) => state.deauthenticate);
+  const authenticate = authStore((state) => state.authenticate);
+  const deauthenticate = authStore((state) => state.deauthenticate);
   return { authenticate, deauthenticate };
 };
