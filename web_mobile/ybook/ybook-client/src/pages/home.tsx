@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { Loader } from "../components/auth/Loader";
+import { Loader } from "../components/default/Loader";
 import { PostPreview } from "../components/posts/PostPreview";
 import { usePosts } from "../hooks/posts/usePosts";
 

@@ -5,3 +5,11 @@ export function Loader() {
     </div>
   );
 }
+
+export function CenterLoader() {
+  return (
+    <div className="flex items-center justify-center p-4">
+      <Loader />
+    </div>
+  );
+}

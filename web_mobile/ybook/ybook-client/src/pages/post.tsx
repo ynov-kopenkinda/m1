@@ -2,7 +2,7 @@ import { IconHeart, IconMessage } from "@tabler/icons-react";
 import cx from "classnames";
 import DOMPurify from "dompurify";
 import { Navigate, useParams } from "react-router";
-import { Loader } from "../components/auth/Loader";
+import { Loader } from "../components/default/Loader";
 import { ReplyToPost } from "../components/posts/ReplyToPost";
 import { useSession } from "../hooks/auth/useSession";
 import { useLikePost } from "../hooks/posts/useLikePost";
