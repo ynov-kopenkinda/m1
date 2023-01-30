@@ -6,6 +6,7 @@ import FriendsPage from "./pages/friends";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
 import NewPostPage from "./pages/new-post";
+import NotificationsPage from "./pages/notifications";
 import PostPage from "./pages/post";
 import RegisterPage from "./pages/register";
 import SettingsPage from "./pages/settings";
@@ -31,6 +32,10 @@ const router = createHashRouter([
       {
         path: "/settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "/notifications",
+        element: <NotificationsPage />,
       },
     ],
   },

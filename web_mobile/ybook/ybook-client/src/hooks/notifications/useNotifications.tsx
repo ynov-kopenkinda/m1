@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-export interface NotificationsResponse {
+export interface Notification {
   id: number;
   createdAt: string;
   updatedAt: string;
@@ -23,7 +23,7 @@ export interface Friendship {
 const NOTIFICATIONS_KEY = () => "/notifications";
 
 export function useNotifications() {
-  const { data, isLoading } = useQuery<NotificationsResponse[]>([
+  const { data, isLoading } = useQuery<Notification[]>([
     NOTIFICATIONS_KEY(),
   ]);
   return [data, isLoading] as const;
