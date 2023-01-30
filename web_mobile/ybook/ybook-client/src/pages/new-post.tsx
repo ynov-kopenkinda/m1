@@ -17,29 +17,32 @@ export default function NewPostPage() {
   const createPost = useCreatePost();
 
   return (
-    <div className="overflow-hidden rounded-md border">
-      <Editor
-        editorState={editorState}
-        onEditorStateChange={setEditorState}
-        editorClassName="p-4"
-        toolbarClassName="flex sticky top-0 z-50 !justify-center mx-auto border-t-0 border-l-0 border-r-0 border-b border-gray-200"
-        toolbar={{
-          options: ["inline", "list", "textAlign"],
-        }}
-      />
-      <div className="w-full px-2 pb-2">
-        <button
-          onClick={async () => {
-            const post = await createPost(markup);
-            console.log(post);
-            navigate(`/post/${post.id}`);
+    <div className="flex flex-col gap-2">
+      <h1 className="mb-4 text-4xl font-black">New post</h1>
+      <div className="overflow-hidden rounded-md border">
+        <Editor
+          editorState={editorState}
+          onEditorStateChange={setEditorState}
+          editorClassName="p-4"
+          toolbarClassName="flex sticky top-0 z-50 !justify-center mx-auto border-t-0 border-l-0 border-r-0 border-b border-gray-200"
+          toolbar={{
+            options: ["inline", "list", "textAlign"],
           }}
-          className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-500 p-2 text-white disabled:bg-blue-300 disabled:text-gray-500"
-          disabled={markup === "<p></p>\n"}
-        >
-          <span>Submit</span>
-          <IconSend stroke={1} />
-        </button>
+        />
+        <div className="w-full px-2 pb-2">
+          <button
+            onClick={async () => {
+              const post = await createPost(markup);
+              console.log(post);
+              navigate(`/post/${post.id}`);
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-500 p-2 text-white disabled:bg-blue-300 disabled:text-gray-500"
+            disabled={markup === "<p></p>\n"}
+          >
+            <span>Submit</span>
+            <IconSend stroke={1} />
+          </button>
+        </div>
       </div>
     </div>
   );

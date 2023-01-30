@@ -2,6 +2,7 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import { RequiresAuth } from "./components/auth/RequiresAuth";
 import { AppLayout } from "./components/default/Layout";
 import ForgotPasswordPage from "./pages/forgot-password";
+import FriendsPage from "./pages/friends";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
 import NewPostPage from "./pages/new-post";
@@ -21,6 +22,10 @@ const router = createHashRouter([
       {
         path: "/new-post",
         element: <NewPostPage />,
+      },
+      {
+        path: "/friends",
+        element: <FriendsPage />,
       },
     ],
   },

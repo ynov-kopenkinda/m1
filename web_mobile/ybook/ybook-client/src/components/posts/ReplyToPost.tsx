@@ -23,7 +23,7 @@ export function ReplyToPost({ postId }: { postId: number }) {
           value={content}
           onChange={(e) => setContent(e.target.value.slice(0, 250))}
           disabled={isLoading}
-          className="flex-1 rounded-md border p-2"
+          className="flex-1 resize-none rounded-md border p-2"
         />
         <small className="ml-auto text-xs">{content.length}/250</small>
       </div>
@@ -31,7 +31,7 @@ export function ReplyToPost({ postId }: { postId: number }) {
         className="flex items-center justify-center gap-2 rounded-md bg-blue-500 p-2 text-white disabled:bg-blue-300 disabled:text-gray-500"
         disabled={content.trim().length === 0}
       >
-        Send
+        Reply
         <IconSend stroke={1} />
       </button>
     </form>

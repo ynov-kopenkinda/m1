@@ -30,51 +30,54 @@ export default function PostPage() {
     (comment) => comment.user.email === session?.email
   );
   return (
-    <div className="flex flex-col gap-2 rounded-md border p-4">
-      <span className=" inline-block text-lg font-bold">
-        {post.user.firstname} {post.user.lastname}
-      </span>
-      <div
-        className="prose prose-sm"
-        dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(post.htmlContent),
-        }}
-      />
-      <hr />
-      <div className="flex justify-between">
-        <button
-          className="text-md flex items-center py-2 pr-2"
-          onClick={() => like()}
-        >
-          <IconHeart
-            stroke={1}
-            className={cx({ "fill-red-500 text-red-500": likedByMe })}
-          />
-          {post.postLikes.length}
-        </button>
-        <span className="text-md flex items-center py-2 pr-2">
-          <IconMessage
-            stroke={1}
-            className={cx({ "fill-slate-700 text-slate-700": hasMyComments })}
-          />{" "}
-          {post.postComments.length}
+    <div className="flex flex-col gap-2">
+      <h1 className="mb-4 text-4xl font-black">Publication</h1>
+      <div className="flex flex-col gap-2 rounded-md border p-4">
+        <span className=" inline-block text-lg font-bold">
+          {post.user.firstname} {post.user.lastname}
         </span>
-      </div>
-      {post.postComments.length > 0 && <hr />}
-      {post.postComments.map((comment) => (
-        <div className="flex flex-col gap-2" key={comment.id}>
-          <span className="inline-block text-lg font-bold">
-            {comment.user.firstname} {comment.user.lastname}
+        <div
+          className="prose prose-sm"
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(post.htmlContent),
+          }}
+        />
+        <hr />
+        <div className="flex justify-between">
+          <button
+            className="text-md flex items-center py-2 pr-2"
+            onClick={() => like()}
+          >
+            <IconHeart
+              stroke={1}
+              className={cx({ "fill-red-500 text-red-500": likedByMe })}
+            />
+            {post.postLikes.length}
+          </button>
+          <span className="text-md flex items-center py-2 pr-2">
+            <IconMessage
+              stroke={1}
+              className={cx({ "fill-slate-700 text-slate-700": hasMyComments })}
+            />{" "}
+            {post.postComments.length}
           </span>
-          <div
-            className="prose prose-sm"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(comment.text ?? ""),
-            }}
-          />
         </div>
-      ))}
-      <ReplyToPost postId={post.id} />
+        {post.postComments.length > 0 && <hr />}
+        {post.postComments.map((comment) => (
+          <div className="flex flex-col gap-2" key={comment.id}>
+            <span className="inline-block text-lg font-bold">
+              {comment.user.firstname} {comment.user.lastname}
+            </span>
+            <div
+              className="prose prose-sm"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(comment.text ?? ""),
+              }}
+            />
+          </div>
+        ))}
+        <ReplyToPost postId={post.id} />
+      </div>
     </div>
   );
 }
