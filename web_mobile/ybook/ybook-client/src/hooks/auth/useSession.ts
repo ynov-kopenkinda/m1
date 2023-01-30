@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { User } from "../posts/usePosts";
 
 type SessionData = {
   name: string;
   surname: string;
   email: string;
+  user: User;
 };
 
 type SessionResult =

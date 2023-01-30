@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router";
 import { useSession } from "../../hooks/auth/useSession";
 import { AppLayout } from "../default/Layout";
+import { CenterLoader } from "../default/Loader";
 
 export const RequiresAuth = () => {
   const { status, data } = useSession();
@@ -8,7 +9,7 @@ export const RequiresAuth = () => {
     return <Navigate to={"/login"} />;
   }
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <CenterLoader />;
   }
   return (
     <AppLayout>

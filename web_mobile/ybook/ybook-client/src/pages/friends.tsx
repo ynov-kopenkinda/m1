@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FriendRequests } from "../components/friends/FriendRequests";
 import { GlobalFriendSearch } from "../components/friends/GlobalFriendSearch";
 import { SuggestedFriends } from "../components/friends/SuggestedFriends";
 import { YourFriends } from "../components/friends/YourFriends";
@@ -17,6 +18,7 @@ export default function FriendsPage() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+      <FriendRequests />
       <YourFriends search={search} />
       <GlobalFriendSearch search={search} />
     </div>

@@ -6,14 +6,19 @@ export const friendsRouter = Router();
 friendsRouter.use(isAuthed(true));
 
 friendsRouter.get("/", async (req, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const friends = await prisma.user.findMany({
     where: {
       OR: [
         {
           toFrienship: {
             some: {
-              from: { email: session.email },
+              OR: [
+                { from: { email: session.email } },
+                {
+                  to: { email: session.email },
+                },
+              ],
             },
             every: {
               status: "ACCEPTED",
@@ -23,7 +28,12 @@ friendsRouter.get("/", async (req, res) => {
         {
           fromFriendship: {
             some: {
-              to: { email: session.email },
+              OR: [
+                { from: { email: session.email } },
+                {
+                  to: { email: session.email },
+                },
+              ],
             },
             every: {
               status: "ACCEPTED",
@@ -32,12 +42,13 @@ friendsRouter.get("/", async (req, res) => {
         },
       ],
     },
+    distinct: "id",
   });
   return res.json(friends);
 });
 
 friendsRouter.get("/suggested", async (req, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const friends = await prisma.friendship.findMany({
     where: {
       AND: [
@@ -79,7 +90,7 @@ friendsRouter.get("/suggested", async (req, res) => {
 });
 
 friendsRouter.get("/global", async (req, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const search = req.query.search as string;
   const friends = await prisma.friendship.findMany({
     where: {
@@ -132,7 +143,7 @@ friendsRouter.get("/global", async (req, res) => {
 });
 
 friendsRouter.post("/", async (req, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const { email } = req.body;
   const requestExists = await prisma.friendship.findFirst({
     where: {
@@ -180,7 +191,7 @@ friendsRouter.post("/reject", async (req, res) => {
 
 friendsRouter.delete("/cancel", async (req, res) => {
   const { id: friendId } = req.body;
-  const session = getSession(res);
+  const session = await getSession(res);
   const friendship = await prisma.friendship.findFirst({
     where: {
       OR: [
@@ -194,4 +205,21 @@ friendsRouter.delete("/cancel", async (req, res) => {
   }
   await prisma.friendship.delete({ where: { id: friendship.id } });
   return res.json({ success: true });
+});
+
+friendsRouter.get("/requests", async (req, res) => {
+  const session = await getSession(res);
+  const requests = await prisma.user.findMany({
+    where: {
+      fromFriendship: {
+        some: {
+          to: { email: session.email },
+        },
+        every: {
+          status: "PENDING",
+        },
+      },
+    },
+  });
+  return res.json(requests);
 });

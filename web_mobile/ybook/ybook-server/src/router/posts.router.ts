@@ -40,7 +40,7 @@ postsRouter.get("/", async (req, res) => {
 });
 
 postsRouter.post("/", async (req, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const { content } = req.body;
   if (typeof content !== "string") {
     return res.status(400).send("Content must be a string");
@@ -78,7 +78,7 @@ postsRouter.get("/:postId", async (req, res) => {
 
 postsRouter.post("/:postId/like", async (req, res) => {
   const postId = parseInt(req.params.postId);
-  const session = getSession(res);
+  const session = await getSession(res);
   if (Number.isNaN(postId)) {
     return res.status(400).send("Post ID must be a number");
   }
@@ -112,7 +112,7 @@ postsRouter.post("/:postId/like", async (req, res) => {
 });
 
 postsRouter.post("/:postId/reply", async (req, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const postId = parseInt(req.params.postId);
   const { content } = req.body;
   if (Number.isNaN(postId)) {

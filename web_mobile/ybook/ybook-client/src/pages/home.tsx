@@ -1,11 +1,17 @@
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { Loader } from "../components/default/Loader";
+import { CenterLoader, Loader } from "../components/default/Loader";
 import { PostPreview } from "../components/posts/PostPreview";
 import { usePosts } from "../hooks/posts/usePosts";
 
 const HomePage = () => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = usePosts();
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isInitialLoading,
+  } = usePosts();
   const { ref, inView } = useInView();
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -29,6 +35,7 @@ const HomePage = () => {
           />
         ))
       )}
+      {isInitialLoading && <CenterLoader />}
       {isFetchingNextPage && (
         <div className="flex h-12 items-center justify-center">
           <Loader />

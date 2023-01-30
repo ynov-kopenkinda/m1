@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { env } from "../../env";
 import { useAuth } from "../../store/auth.store";
+import { FRIEND_REQUESTS_KEY } from "./useFriendRequests";
 import { FRIENDS_KEY } from "./useFriends";
 import { SUGGESTED_FRIENDS_KEY } from "./useSuggestedFriends";
 
@@ -21,6 +22,7 @@ export function useSendFriendRequest() {
       onSuccess: async () => {
         await queryClient.invalidateQueries([FRIENDS_KEY()]);
         await queryClient.invalidateQueries([SUGGESTED_FRIENDS_KEY()]);
+        await queryClient.invalidateQueries([FRIEND_REQUESTS_KEY()]);
       },
     }
   );

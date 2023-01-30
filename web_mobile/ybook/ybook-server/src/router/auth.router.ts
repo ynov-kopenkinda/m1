@@ -1,15 +1,20 @@
 import { Router } from "express";
 import prisma from "../db";
-import { getSession, isAuthed } from "../middleware/session.middleware";
+import {
+  getSession,
+  getSessionOrNull,
+  isAuthed,
+} from "../middleware/session.middleware";
 
 export const authRouter = Router();
 
-authRouter.get("/session", isAuthed(false), (req, res) => {
-  return res.json({ session: res.locals.session ?? null });
+authRouter.get("/session", isAuthed(false), async (req, res) => {
+  const session = await getSessionOrNull(res);
+  return res.json({ session });
 });
 
 authRouter.post("/createUser", isAuthed(true), async (_, res) => {
-  const session = getSession(res);
+  const session = await getSession(res);
   const user = await prisma.user.upsert({
     where: {
       email: session.email,

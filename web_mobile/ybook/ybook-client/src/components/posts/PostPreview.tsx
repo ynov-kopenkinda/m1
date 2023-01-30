@@ -6,6 +6,7 @@ import cx from "classnames";
 import { useSession } from "../../hooks/auth/useSession";
 import { useLikePost } from "../../hooks/posts/useLikePost";
 import { Link } from "react-router-dom";
+import { Avatar } from "../default/Avatar";
 
 export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
   ({ post }, ref) => {
@@ -19,9 +20,12 @@ export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
     const like = useLikePost(post.id);
     return (
       <div ref={ref} className="flex flex-col gap-2 rounded-md border p-4">
-        <span className=" inline-block text-lg font-bold">
-          {post.user.firstname} {post.user.lastname}
-        </span>
+        <div className="flex items-center gap-2">
+          <Avatar user={post.user} />
+          <span className="inline-block text-lg font-bold">
+            {post.user.firstname} {post.user.lastname}
+          </span>
+        </div>
         <div
           className="prose prose-sm"
           dangerouslySetInnerHTML={{
