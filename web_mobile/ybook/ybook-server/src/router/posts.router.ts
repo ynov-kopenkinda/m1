@@ -4,7 +4,9 @@ import { getSession, isAuthed } from "../middleware/session.middleware";
 
 export const postsRouter = Router();
 
-postsRouter.get("/", isAuthed(true), async (req, res) => {
+postsRouter.use(isAuthed(true));
+
+postsRouter.get("/", async (req, res) => {
   const page = parseInt(req.query.page as string) || 1;
   if (Number.isNaN(page)) {
     return res.status(400).send("Page must be a number");
@@ -37,7 +39,7 @@ postsRouter.get("/", isAuthed(true), async (req, res) => {
   });
 });
 
-postsRouter.post("/", isAuthed(true), async (req, res) => {
+postsRouter.post("/", async (req, res) => {
   const session = getSession(res);
   const { content } = req.body;
   if (typeof content !== "string") {
@@ -52,7 +54,7 @@ postsRouter.post("/", isAuthed(true), async (req, res) => {
   return res.json(post);
 });
 
-postsRouter.get("/:postId", isAuthed(true), async (req, res) => {
+postsRouter.get("/:postId", async (req, res) => {
   const postId = parseInt(req.params.postId);
   if (Number.isNaN(postId)) {
     return res.status(400).send("Post ID must be a number");
@@ -74,7 +76,7 @@ postsRouter.get("/:postId", isAuthed(true), async (req, res) => {
   return res.json(post);
 });
 
-postsRouter.post("/:postId/like", isAuthed(true), async (req, res) => {
+postsRouter.post("/:postId/like", async (req, res) => {
   const postId = parseInt(req.params.postId);
   const session = getSession(res);
   if (Number.isNaN(postId)) {
@@ -109,7 +111,7 @@ postsRouter.post("/:postId/like", isAuthed(true), async (req, res) => {
   return res.json({ success: true });
 });
 
-postsRouter.post("/:postId/reply", isAuthed(true), async (req, res) => {
+postsRouter.post("/:postId/reply", async (req, res) => {
   const session = getSession(res);
   const postId = parseInt(req.params.postId);
   const { content } = req.body;

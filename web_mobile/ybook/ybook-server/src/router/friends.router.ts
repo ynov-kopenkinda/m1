@@ -3,8 +3,9 @@ import prisma from "../db";
 import { getSession, isAuthed } from "../middleware/session.middleware";
 
 export const friendsRouter = Router();
+friendsRouter.use(isAuthed(true));
 
-friendsRouter.get("/", isAuthed(true), async (req, res) => {
+friendsRouter.get("/", async (req, res) => {
   const session = getSession(res);
   const friends = await prisma.user.findMany({
     where: {
@@ -35,7 +36,7 @@ friendsRouter.get("/", isAuthed(true), async (req, res) => {
   return res.json(friends);
 });
 
-friendsRouter.get("/suggested", isAuthed(true), async (req, res) => {
+friendsRouter.get("/suggested", async (req, res) => {
   const session = getSession(res);
   const friends = await prisma.friendship.findMany({
     where: {
@@ -77,25 +78,41 @@ friendsRouter.get("/suggested", isAuthed(true), async (req, res) => {
   return res.json(suggested);
 });
 
-friendsRouter.get("/global", isAuthed(true), async (req, res) => {
+friendsRouter.get("/global", async (req, res) => {
   const session = getSession(res);
   const search = req.query.search as string;
   const friends = await prisma.friendship.findMany({
     where: {
-      from: { email: session.email },
+      AND: [
+        {
+          status: "ACCEPTED",
+        },
+        {
+          OR: [
+            { from: { email: session.email } },
+            { to: { email: session.email } },
+          ],
+        },
+      ],
     },
     include: {
       to: { select: { email: true } },
+      from: { select: { email: true } },
     },
   });
+  const excludedEmails = Array.from(
+    new Set(
+      friends
+        .map((friend) => friend.to.email)
+        .concat(...friends.map((friend) => friend.from.email))
+    )
+  );
   const suggested = await prisma.user.findMany({
     where: {
       AND: [
         {
           email: {
-            notIn: friends
-              .map((friend) => friend.to.email)
-              .concat(session.email),
+            notIn: excludedEmails.concat(session.email),
           },
         },
         {
@@ -114,7 +131,7 @@ friendsRouter.get("/global", isAuthed(true), async (req, res) => {
   return res.json(suggested);
 });
 
-friendsRouter.post("/", isAuthed(true), async (req, res) => {
+friendsRouter.post("/", async (req, res) => {
   const session = getSession(res);
   const { email } = req.body;
   const requestExists = await prisma.friendship.findFirst({
@@ -146,7 +163,7 @@ friendsRouter.post("/", isAuthed(true), async (req, res) => {
   return res.json({ success: true });
 });
 
-friendsRouter.post("/accept", isAuthed(true), async (req, res) => {
+friendsRouter.post("/accept", async (req, res) => {
   const { id } = req.body;
   await prisma.friendship.update({
     where: { id },
@@ -155,13 +172,13 @@ friendsRouter.post("/accept", isAuthed(true), async (req, res) => {
   return res.json({ success: true });
 });
 
-friendsRouter.post("/reject", isAuthed(true), async (req, res) => {
+friendsRouter.post("/reject", async (req, res) => {
   const { id } = req.body;
   await prisma.friendship.delete({ where: { id } });
   return res.json({ success: true });
 });
 
-friendsRouter.delete("/cancel", isAuthed(true), async (req, res) => {
+friendsRouter.delete("/cancel", async (req, res) => {
   const { id: friendId } = req.body;
   const session = getSession(res);
   const friendship = await prisma.friendship.findFirst({
