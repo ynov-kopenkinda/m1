@@ -7,6 +7,7 @@ import { useSession } from "../../hooks/auth/useSession";
 import { useLikePost } from "../../hooks/posts/useLikePost";
 import { Link } from "react-router-dom";
 import { Avatar } from "../default/Avatar";
+import { useProfilePopup } from "../../store/profile.store";
 
 export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
   ({ post }, ref) => {
@@ -17,15 +18,20 @@ export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
     const hasMyComments = post.postComments.some(
       (comment) => comment.user.email === session?.email
     );
+    const { open } = useProfilePopup();
+
     const like = useLikePost(post.id);
     return (
       <div ref={ref} className="flex flex-col gap-2 rounded-md border p-4">
-        <div className="flex items-center gap-2">
+        <button
+          className="flex items-center gap-2"
+          onClick={() => open(post.user)}
+        >
           <Avatar user={post.user} />
           <span className="inline-block text-lg font-bold">
             {post.user.firstname} {post.user.lastname}
           </span>
-        </div>
+        </button>
         <div
           className="prose prose-sm"
           dangerouslySetInnerHTML={{

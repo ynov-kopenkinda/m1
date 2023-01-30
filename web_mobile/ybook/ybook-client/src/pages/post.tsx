@@ -2,11 +2,13 @@ import { IconHeart, IconMessage } from "@tabler/icons-react";
 import cx from "classnames";
 import DOMPurify from "dompurify";
 import { Navigate, useParams } from "react-router";
+import { Avatar } from "../components/default/Avatar";
 import { Loader } from "../components/default/Loader";
 import { ReplyToPost } from "../components/posts/ReplyToPost";
 import { useSession } from "../hooks/auth/useSession";
 import { useLikePost } from "../hooks/posts/useLikePost";
 import { usePost } from "../hooks/posts/usePost";
+import { useProfilePopup } from "../store/profile.store";
 
 export default function PostPage() {
   const { id: _id } = useParams();
@@ -15,6 +17,7 @@ export default function PostPage() {
 
   const { data: session } = useSession();
   const like = useLikePost(id);
+  const { open } = useProfilePopup();
   if (isLoading)
     return (
       <div className="flex items-center justify-center py-16">
@@ -33,9 +36,15 @@ export default function PostPage() {
     <div className="flex flex-col gap-2">
       <h1 className="mb-4 text-4xl font-black">Publication</h1>
       <div className="flex flex-col gap-2 rounded-md border p-4">
-        <span className=" inline-block text-lg font-bold">
-          {post.user.firstname} {post.user.lastname}
-        </span>
+        <button
+          className="flex items-center gap-2"
+          onClick={() => open(post.user)}
+        >
+          <Avatar user={post.user} />
+          <span className=" inline-block text-lg font-bold">
+            {post.user.firstname} {post.user.lastname}
+          </span>
+        </button>
         <div
           className="prose prose-sm"
           dangerouslySetInnerHTML={{
@@ -54,7 +63,7 @@ export default function PostPage() {
             />
             {post.postLikes.length}
           </button>
-          <span className="text-md flex items-center py-2 pr-2">
+          <span className="text-md flex items-center py-2">
             <IconMessage
               stroke={1}
               className={cx({ "fill-slate-700 text-slate-700": hasMyComments })}

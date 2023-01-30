@@ -5,6 +5,7 @@ import ForgotPasswordPage from "./pages/forgot-password";
 import FriendsPage from "./pages/friends";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
+import MessagesPage from "./pages/messages";
 import NewPostPage from "./pages/new-post";
 import NotificationsPage from "./pages/notifications";
 import PostPage from "./pages/post";
@@ -36,6 +37,10 @@ const router = createHashRouter([
       {
         path: "/notifications",
         element: <NotificationsPage />,
+      },
+      {
+        path: "/messages",
+        element: <MessagesPage />,
       },
     ],
   },
