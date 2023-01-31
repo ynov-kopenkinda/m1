@@ -29,7 +29,7 @@ export function ProfileSettings() {
         },
       });
       if (uploadRes.status === 200) {
-        await updateAvatarKey(s3uploadResponse.key);
+        await updateAvatarKey({ s3key: s3uploadResponse.key });
       }
     };
   };
