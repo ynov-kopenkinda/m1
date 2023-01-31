@@ -18,7 +18,7 @@ export default function FriendsPage() {
       />
       {search.length === 0 && <SuggestedFriends />}
       <YourFriends search={search} />
-      <GlobalFriendSearch search={search} />
+      {search.length > 0 && <GlobalFriendSearch search={search} />}
     </div>
   );
 }
