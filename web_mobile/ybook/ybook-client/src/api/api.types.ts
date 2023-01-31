@@ -49,6 +49,10 @@ export type ApiGetSessionResponse = {
 
 export type ApiGetNotificationsResponse = Notification[];
 
+export type ApiChangeAvatarResponse = {
+  user: User;
+};
+
 // Types
 
 export type Session = {

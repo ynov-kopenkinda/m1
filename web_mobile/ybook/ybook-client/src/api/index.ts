@@ -136,7 +136,7 @@ export const api = {
   },
   settings: {
     changeAvatar({ s3key }: { s3key: string }) {
-      return _fetch("/users/change-avatar", {
+      return _fetch<types.ApiChangeAvatarResponse>("/users/change-avatar", {
         method: "POST",
         body: JSON.stringify({ s3key }),
       });

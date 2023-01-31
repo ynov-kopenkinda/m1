@@ -7,8 +7,10 @@ export function useReplyToPost(postId: number) {
   const queryClient = useQueryClient();
   const { error, isLoading, mutateAsync } = useMutation(api.posts.reply, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([USE_POSTS_KEY]);
-      await queryClient.invalidateQueries([USE_POST_KEY, postId]);
+      await Promise.allSettled([
+        queryClient.invalidateQueries([USE_POSTS_KEY]),
+        queryClient.invalidateQueries([USE_POST_KEY, postId]),
+      ]);
     },
   });
   return { error, isLoading, mutateAsync };

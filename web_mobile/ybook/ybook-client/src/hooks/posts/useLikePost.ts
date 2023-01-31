@@ -6,9 +6,11 @@ import { USE_POSTS_KEY } from "./usePosts";
 export const useLikePost = (postId: number) => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation(api.posts.like, {
-    onSuccess: () => {
-      queryClient.invalidateQueries([USE_POSTS_KEY]);
-      queryClient.invalidateQueries([USE_POST_KEY, postId]);
+    onSuccess: async () => {
+      await Promise.allSettled([
+        queryClient.invalidateQueries([USE_POSTS_KEY]),
+        queryClient.invalidateQueries([USE_POST_KEY, postId]),
+      ]);
     },
   });
   return mutate;

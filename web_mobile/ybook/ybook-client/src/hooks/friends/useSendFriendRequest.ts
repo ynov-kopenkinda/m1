@@ -9,10 +9,12 @@ export function useSendFriendRequest({ userId }: { userId: number }) {
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation(() => api.friends.request({ userId }), {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([USE_FRIENDS_KEY]);
-      await queryClient.invalidateQueries([USE_SUGGESTED_FRIENDS_KEY]);
-      await queryClient.invalidateQueries([USE_FRIEND_REQUESTS_KEY]);
-      await queryClient.invalidateQueries([USE_DETAILED_USER_KEY, userId]);
+      await Promise.allSettled([
+        queryClient.invalidateQueries([USE_FRIENDS_KEY]),
+        queryClient.invalidateQueries([USE_SUGGESTED_FRIENDS_KEY]),
+        queryClient.invalidateQueries([USE_FRIEND_REQUESTS_KEY]),
+        queryClient.invalidateQueries([USE_DETAILED_USER_KEY, userId]),
+      ]);
     },
   });
   return mutateAsync;
