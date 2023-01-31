@@ -1,8 +1,18 @@
+import {
+  IconMessage,
+  IconUserCheck,
+  IconUserOff,
+  IconUserPlus,
+  IconUserX,
+} from "@tabler/icons-react";
 import cx from "classnames";
 import { Session, User } from "../../api/api.types";
 import { useSession } from "../../hooks/auth/useSession";
+import { useSendFriendRequest } from "../../hooks/friends/useSendFriendRequest";
+import { useDetailedUser } from "../../hooks/users/useDetailedUser";
 import { useProfilePopup } from "../../store/profile.store";
 import { Avatar } from "./Avatar";
+import { CenterLoader } from "./Loader";
 
 export function ProfilePreview() {
   return (
@@ -53,6 +63,14 @@ function ProfilePreviewCardInner({
   user: User;
   session: Session;
 }) {
+  const [details, detailsLoading] = useDetailedUser({ user });
+  const isFriend = details?.friends
+    .map((friend) => friend.id)
+    .includes(session.user.id);
+  const isBlocked = details?.user?.blockedByUsers
+    .map((u) => u.id)
+    .includes(user.id);
+  const isYou = user.id === session.user.id;
   return (
     <>
       <div className="absolute left-1/2 top-0 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 bg-white">
@@ -63,8 +81,63 @@ function ProfilePreviewCardInner({
       </h1>
       <p className="text-gray-400">
         <strong className="font-black">#{user.id}</strong> {user.email}{" "}
-        {user.email === session?.email && "(You)"}
+        {isYou ? "(You)" : null}
       </p>
+      {detailsLoading && <CenterLoader />}
+      {details !== undefined && !isYou && (
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="w-full"></div>
+          {isFriend && !isBlocked && <SendMessageButton user={user} />}
+          {!isFriend && !isBlocked && <AddToFriendsButton user={user} />}
+          {isFriend && !isBlocked && <RemoveFromFriendsButton user={user} />}
+          {isBlocked && <UnblockUserButton user={user} />}
+          {!isBlocked && <BlockUserButton user={user} />}
+        </div>
+      )}
     </>
+  );
+}
+
+function AddToFriendsButton({ user }: { user: User }) {
+  const add = useSendFriendRequest();
+  return (
+    <button
+      className="flex items-center gap-2 rounded border border-gray-500 p-2 text-sm"
+      onClick={() => add({ email: user.email })}
+    >
+      <IconUserPlus stroke={1} /> Add to friends
+    </button>
+  );
+}
+
+function RemoveFromFriendsButton({ user }: { user: User }) {
+  return (
+    <button className="flex items-center gap-2 rounded border  border-gray-500 p-2 text-sm">
+      <IconUserX stroke={1} /> Remove from friends
+    </button>
+  );
+}
+
+function BlockUserButton({ user }: { user: User }) {
+  return (
+    <button className="flex items-center gap-2 rounded border border-red-500 p-2 text-sm text-red-500">
+      <IconUserOff stroke={1} /> Block user
+    </button>
+  );
+}
+
+function UnblockUserButton({ user }: { user: User }) {
+  return (
+    <button className="flex items-center gap-2 rounded border border-green-500 p-2 text-sm text-green-500">
+      <IconUserCheck stroke={1} /> Unblock user
+    </button>
+  );
+}
+
+function SendMessageButton({ user }: { user: User }) {
+  return (
+    <button className="flex items-center gap-2 rounded border border-blue-500 p-2 text-sm text-blue-500">
+      <IconMessage stroke={1} />
+    </button>
   );
 }

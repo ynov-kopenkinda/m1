@@ -130,6 +130,9 @@ export const api = {
         `/friends/global?search=${search}`
       );
     },
+    getOne({ id }: { id: number }) {
+      return _fetch<types.ApiGetUserResponse>(`/users/${id}`);
+    },
   },
   settings: {
     changeAvatar({ s3key }: { s3key: string }) {

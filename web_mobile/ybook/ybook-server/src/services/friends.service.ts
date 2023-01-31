@@ -14,9 +14,14 @@ export const friendsService = {
     const friendshipsIds = friendships.map((friendship) => friendship.id);
     const friends = await prisma.user.findMany({
       where: {
-        OR: [
-          { fromFriendship: { some: { id: { in: friendshipsIds } } } },
-          { toFrienship: { some: { id: { in: friendshipsIds } } } },
+        AND: [
+          {
+            OR: [
+              { fromFriendship: { some: { id: { in: friendshipsIds } } } },
+              { toFrienship: { some: { id: { in: friendshipsIds } } } },
+            ],
+          },
+          { email: { not: email } },
         ],
       },
     });

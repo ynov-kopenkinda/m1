@@ -16,6 +16,7 @@ notificationsRouter.get("/", async (req, res) => {
             {
               friendship: {
                 to: { email: session.email },
+                status: "PENDING",
               },
             },
             {

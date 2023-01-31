@@ -15,6 +15,11 @@ export type ApiGetFriendsResponse = User[];
 
 export type ApiGetUsersResponse = User[];
 
+export type ApiGetUserResponse = {
+  user: User & { blockedByUsers: User[] };
+  friends: User[];
+};
+
 export type ApiCancelFriendRequestResponse = {
   success: boolean;
 };
