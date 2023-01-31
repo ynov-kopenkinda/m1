@@ -1,8 +1,7 @@
-import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
-import { DetailedHTMLProps, forwardRef, HTMLAttributes } from "react";
+import { createAvatar } from "@dicebear/core";
 import cx from "classnames";
-import { useS3Image } from "../../hooks/users/useS3Image";
+import { DetailedHTMLProps, forwardRef, HTMLAttributes, useMemo } from "react";
 import { User } from "../../api/api.types";
 import { S3Image } from "./S3Image";
 
@@ -13,18 +12,16 @@ export const Avatar = forwardRef<
   }
 >(function ({ user, className = "w-12 h-12", ...props }, ref) {
   const fullname = `${user.firstname} ${user.lastname}`;
-  const s3avatar = useS3Image(user.avatarS3Key);
-  let url: string = s3avatar ?? "";
-  if (url === "") {
+  const fallbackUrl = useMemo(() => {
     const avatar = createAvatar(lorelei, {
       seed: fullname,
     });
-    url = avatar.toDataUriSync();
-  }
+    return avatar.toDataUriSync();
+  }, [fullname]);
   return (
     <S3Image
       s3Key={user.avatarS3Key}
-      urlOnLoading={url}
+      fallbackUrl={fallbackUrl}
       className={cx("rounded-full", className)}
       alt={fullname}
     />

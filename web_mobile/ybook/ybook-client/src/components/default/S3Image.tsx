@@ -1,22 +1,37 @@
-import { DetailedHTMLProps, forwardRef, HTMLAttributes } from "react";
+import {
+  DetailedHTMLProps,
+  forwardRef,
+  HTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 import { useS3Image } from "../../hooks/users/useS3Image";
 
 export const S3Image = forwardRef<
   HTMLImageElement,
   DetailedHTMLProps<HTMLAttributes<HTMLImageElement>, HTMLImageElement> & {
     s3Key: string | null;
-    urlOnLoading: string;
+    fallbackUrl: string;
     alt?: string;
   }
->(function ({ s3Key, alt, urlOnLoading, ...props }, ref) {
+>(function ({ s3Key, alt, onError, fallbackUrl, ...props }, ref) {
   const imageUrl = useS3Image(s3Key);
+  const [url, setUrl] = useState(imageUrl ?? fallbackUrl);
+  useEffect(() => {
+    setUrl(imageUrl ?? fallbackUrl);
+  }, [fallbackUrl, imageUrl]);
+  console.log("S3Image", { s3Key, url, fallbackUrl });
   return (
     <img
       ref={ref}
       loading="lazy"
-      src={imageUrl ?? urlOnLoading}
+      src={url}
       alt={alt}
       role={props.role ?? alt === undefined ? "presentation" : undefined}
+      onError={(e) => {
+        setUrl(fallbackUrl);
+        onError?.(e);
+      }}
       {...props}
     />
   );
