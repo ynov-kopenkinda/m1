@@ -20,7 +20,6 @@ export const S3Image = forwardRef<
   useEffect(() => {
     setUrl(imageUrl ?? fallbackUrl);
   }, [fallbackUrl, imageUrl]);
-  console.log("S3Image", { s3Key, url, fallbackUrl });
   return (
     <img
       ref={ref}
