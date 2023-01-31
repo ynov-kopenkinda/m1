@@ -22,7 +22,7 @@ export function useSession(): SessionResult {
   const { data, isInitialLoading } = useQuery([USE_SESSION_KEY], async () => {
     const [session, error] = await api.auth.getSession();
     if (error) {
-      throw error;
+      return { session: null };
     }
     return session;
   });

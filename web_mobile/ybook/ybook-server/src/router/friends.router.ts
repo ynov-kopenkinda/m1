@@ -1,89 +1,24 @@
 import { Router } from "express";
 import prisma from "../db";
 import { getSession, isAuthed } from "../middleware/session.middleware";
+import { friendsService } from "../services/friends.service";
 
 export const friendsRouter = Router();
 friendsRouter.use(isAuthed(true));
 
 friendsRouter.get("/", async (req, res) => {
   const session = await getSession(res);
-  const friends = await prisma.user.findMany({
-    where: {
-      OR: [
-        {
-          toFrienship: {
-            some: {
-              OR: [
-                { from: { email: session.email } },
-                {
-                  to: { email: session.email },
-                },
-              ],
-            },
-            every: {
-              status: "ACCEPTED",
-            },
-          },
-        },
-        {
-          fromFriendship: {
-            some: {
-              OR: [
-                { from: { email: session.email } },
-                {
-                  to: { email: session.email },
-                },
-              ],
-            },
-            every: {
-              status: "ACCEPTED",
-            },
-          },
-        },
-      ],
-    },
-    distinct: "id",
-  });
+  const friends = await friendsService.getFriends(session.email);
   return res.json(friends);
 });
 
 friendsRouter.get("/suggested", async (req, res) => {
   const session = await getSession(res);
-  const friends = await prisma.friendship.findMany({
-    where: {
-      AND: [
-        {
-          status: "ACCEPTED",
-        },
-        {
-          OR: [
-            { from: { email: session.email } },
-            { to: { email: session.email } },
-          ],
-        },
-      ],
-    },
-    include: {
-      to: { select: { email: true } },
-      from: { select: { email: true } },
-    },
-  });
-  const excludedEmails = Array.from(
-    new Set(
-      friends
-        .map((friend) => friend.to.email)
-        .concat(...friends.map((friend) => friend.from.email))
-    )
-  );
+  const friends = await friendsService.getFriends(session.email);
+  const exclude = friends.map((friend) => friend.id);
   const suggested = await prisma.user.findMany({
-    where: {
-      email: {
-        notIn: excludedEmails.concat(session.email),
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+    where: { id: { notIn: exclude.concat(session.user.id) } },
+    orderBy: { createdAt: "desc" },
     take: 5,
   });
   return res.json(suggested);
@@ -92,40 +27,12 @@ friendsRouter.get("/suggested", async (req, res) => {
 friendsRouter.get("/global", async (req, res) => {
   const session = await getSession(res);
   const search = req.query.search as string;
-  const friends = await prisma.friendship.findMany({
-    where: {
-      AND: [
-        {
-          status: "ACCEPTED",
-        },
-        {
-          OR: [
-            { from: { email: session.email } },
-            { to: { email: session.email } },
-          ],
-        },
-      ],
-    },
-    include: {
-      to: { select: { email: true } },
-      from: { select: { email: true } },
-    },
-  });
-  const excludedEmails = Array.from(
-    new Set(
-      friends
-        .map((friend) => friend.to.email)
-        .concat(...friends.map((friend) => friend.from.email))
-    )
-  );
+  const friends = await friendsService.getFriends(session.email);
+  const exclude = friends.map((friend) => friend.id);
   const suggested = await prisma.user.findMany({
     where: {
       AND: [
-        {
-          email: {
-            notIn: excludedEmails.concat(session.email),
-          },
-        },
+        { id: { notIn: exclude.concat(session.user.id) } },
         {
           OR: [
             { email: { contains: search } },
@@ -135,9 +42,7 @@ friendsRouter.get("/global", async (req, res) => {
         },
       ],
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: { createdAt: "desc" },
   });
   return res.json(suggested);
 });
@@ -209,17 +114,6 @@ friendsRouter.delete("/cancel", async (req, res) => {
 
 friendsRouter.get("/requests", async (req, res) => {
   const session = await getSession(res);
-  const requests = await prisma.user.findMany({
-    where: {
-      fromFriendship: {
-        some: {
-          to: { email: session.email },
-        },
-        every: {
-          status: "PENDING",
-        },
-      },
-    },
-  });
+  const requests = await friendsService.getRequests(session.email);
   return res.json(requests);
 });

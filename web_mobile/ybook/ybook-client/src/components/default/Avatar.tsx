@@ -14,7 +14,7 @@ export const Avatar = forwardRef<
   const fullname = `${user.firstname} ${user.lastname}`;
   const s3avatar = useS3Image(user.avatarS3Key);
   let url: string = s3avatar ?? "";
-  if (user.avatarS3Key === null) {
+  if (url === "") {
     const avatar = createAvatar(croodlesNeutral, {
       seed: fullname,
     });
@@ -24,6 +24,7 @@ export const Avatar = forwardRef<
     <img
       {...props}
       ref={ref}
+      loading="lazy"
       src={url}
       className={cx("rounded-full", className)}
       alt={fullname}
