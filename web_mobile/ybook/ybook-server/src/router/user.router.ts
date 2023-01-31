@@ -18,6 +18,7 @@ userRouter.post("/change-avatar", async (req, res) => {
 
 userRouter.get("/:id", async (req, res) => {
   const { id: qUserId } = req.params;
+  const session = await getSession(res);
   if (!qUserId) {
     return res.status(400).json({ error: "Missing userId" });
   }
@@ -35,5 +36,18 @@ userRouter.get("/:id", async (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
   const friends = await friendsService.getFriends(user.email);
-  return res.json({ user, friends });
+  const pendingFriendship = await prisma.friendship.findFirst({
+    where: {
+      AND: [
+        {
+          OR: [
+            { fromId: session.user.id, toId: user.id },
+            { toId: session.user.id, fromId: user.id },
+          ],
+        },
+        { status: "PENDING" },
+      ],
+    },
+  });
+  return res.json({ user, friends, pending: pendingFriendship });
 });

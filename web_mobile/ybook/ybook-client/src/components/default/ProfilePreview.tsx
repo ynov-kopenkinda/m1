@@ -8,6 +8,7 @@ import {
 import cx from "classnames";
 import { Session, User } from "../../api/api.types";
 import { useSession } from "../../hooks/auth/useSession";
+import { useRemoveFriendship } from "../../hooks/friends/useRemoveFriendship";
 import { useSendFriendRequest } from "../../hooks/friends/useSendFriendRequest";
 import { useDetailedUser } from "../../hooks/users/useDetailedUser";
 import { useProfilePopup } from "../../store/profile.store";
@@ -88,7 +89,25 @@ function ProfilePreviewCardInner({
         <div className="flex flex-wrap items-center justify-center gap-2">
           <div className="w-full"></div>
           {isFriend && !isBlocked && <SendMessageButton user={user} />}
-          {!isFriend && !isBlocked && <AddToFriendsButton user={user} />}
+          {!isFriend && !isBlocked && details.pending === null && (
+            <AddToFriendsButton user={user} />
+          )}
+          {!isFriend &&
+            !isBlocked &&
+            details.pending !== null &&
+            details.pending.fromId === session.user.id && (
+              <CancelFriendRequestButton user={user} />
+            )}
+
+          {!isFriend &&
+            !isBlocked &&
+            details.pending !== null &&
+            details.pending.fromId !== session.user.id && (
+              <>
+                <AcceptFriendRequestButton user={user} />
+                <DenyFriendRequestButton user={user} />
+              </>
+            )}
           {isFriend && !isBlocked && <RemoveFromFriendsButton user={user} />}
           {isBlocked && <UnblockUserButton user={user} />}
           {!isBlocked && <BlockUserButton user={user} />}
@@ -99,21 +118,61 @@ function ProfilePreviewCardInner({
 }
 
 function AddToFriendsButton({ user }: { user: User }) {
-  const add = useSendFriendRequest();
+  const add = useSendFriendRequest({ userId: user.id });
   return (
     <button
       className="flex items-center gap-2 rounded border border-gray-500 p-2 text-sm"
-      onClick={() => add({ email: user.email })}
+      onClick={() => add()}
     >
       <IconUserPlus stroke={1} /> Add to friends
     </button>
   );
 }
 
-function RemoveFromFriendsButton({ user }: { user: User }) {
+function AcceptFriendRequestButton({ user }: { user: User }) {
+  const accept = useSendFriendRequest({ userId: user.id });
   return (
-    <button className="flex items-center gap-2 rounded border  border-gray-500 p-2 text-sm">
+    <button
+      className="flex items-center gap-2 rounded border border-green-500 p-2 text-sm text-green-500"
+      onClick={() => accept()}
+    >
+      <IconUserCheck stroke={1} /> Accept friend request
+    </button>
+  );
+}
+
+function DenyFriendRequestButton({ user }: { user: User }) {
+  const deny = useRemoveFriendship({ userId: user.id });
+  return (
+    <button
+      className="flex items-center gap-2 rounded border border-red-500 p-2 text-sm text-red-500"
+      onClick={() => deny()}
+    >
+      <IconUserX stroke={1} /> Deny friend request
+    </button>
+  );
+}
+
+function RemoveFromFriendsButton({ user }: { user: User }) {
+  const remove = useRemoveFriendship({ userId: user.id });
+  return (
+    <button
+      className="flex items-center gap-2 rounded border  border-gray-500 p-2 text-sm"
+      onClick={() => remove()}
+    >
       <IconUserX stroke={1} /> Remove from friends
+    </button>
+  );
+}
+
+function CancelFriendRequestButton({ user }: { user: User }) {
+  const remove = useRemoveFriendship({ userId: user.id });
+  return (
+    <button
+      className="flex items-center gap-2 rounded border  border-gray-500 p-2 text-sm"
+      onClick={() => remove()}
+    >
+      <IconUserX stroke={1} /> Cancel friend request
     </button>
   );
 }

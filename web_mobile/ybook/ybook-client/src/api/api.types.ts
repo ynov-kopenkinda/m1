@@ -18,6 +18,7 @@ export type ApiGetUsersResponse = User[];
 export type ApiGetUserResponse = {
   user: User & { blockedByUsers: User[] };
   friends: User[];
+  pending: Friendship | null;
 };
 
 export type ApiCancelFriendRequestResponse = {

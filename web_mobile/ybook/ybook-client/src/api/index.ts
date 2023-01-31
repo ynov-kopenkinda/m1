@@ -92,10 +92,10 @@ export const api = {
         body: JSON.stringify({ id: friendId }),
       });
     },
-    request({ email }: { email: string }) {
+    request({ userId }: { userId: number }) {
       return _fetch<types.ApiRequestFriendResponse>("/friends", {
         method: "POST",
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ userId }),
       });
     },
   },

@@ -49,11 +49,21 @@ friendsRouter.get("/global", async (req, res) => {
 
 friendsRouter.post("/", async (req, res) => {
   const session = await getSession(res);
-  const { email } = req.body;
+  const { userId: qUserId } = req.body;
+  if (!qUserId) {
+    return res.status(400).json({ error: "Missing userId" });
+  }
+  const userId = parseInt(qUserId, 10);
+  if (Number.isNaN(userId)) {
+    return res.status(400).json({ error: "Invalid userId" });
+  }
+  if (userId === session.user.id) {
+    return res.status(400).json({ error: "Cannot add yourself" });
+  }
   const requestExists = await prisma.friendship.findFirst({
     where: {
-      from: { email },
-      to: { email: session.email },
+      from: { id: userId },
+      to: { id: session.user.id },
     },
   });
   if (requestExists !== null) {
@@ -65,8 +75,8 @@ friendsRouter.post("/", async (req, res) => {
   }
   const friendship = await prisma.friendship.create({
     data: {
-      from: { connect: { email: session.email } },
-      to: { connect: { email } },
+      from: { connect: { id: session.user.id } },
+      to: { connect: { id: userId } },
       status: "PENDING",
     },
   });
