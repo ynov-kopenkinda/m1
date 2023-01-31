@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authRouter } from "./auth.router";
+import { chatroomRouter } from "./chatroom.router";
 import { friendsRouter } from "./friends.router";
 import { notificationsRouter } from "./notifications.router";
 import { postsRouter } from "./posts.router";
@@ -14,3 +15,4 @@ appRouter.use("/friends", friendsRouter);
 appRouter.use("/notifications", notificationsRouter);
 appRouter.use("/users", userRouter);
 appRouter.use("/s3", s3uploadRouter);
+appRouter.use("/chatroom", chatroomRouter);

@@ -1,12 +1,12 @@
 import { Router } from "express";
 import prisma from "../db";
-import { getSession, isAuthed } from "../middleware/session.middleware";
+import { extractSession, isAuthed } from "../middleware/session.middleware";
 
 export const notificationsRouter = Router();
 notificationsRouter.use(isAuthed(true));
 
 notificationsRouter.get("/", async (req, res) => {
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const notifications = await prisma.notification.findMany({
     where: {
       AND: [

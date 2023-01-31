@@ -43,7 +43,7 @@ type Session = {
   email: string;
 };
 
-export const getSessionOrNull = async (
+export const extractSessionOrNull = async (
   res: Response
 ): Promise<Session | null> => {
   const session = res.locals.session;
@@ -62,8 +62,8 @@ export const getSessionOrNull = async (
   return _session;
 };
 
-export const getSession = async (res: Response): Promise<Session> => {
-  const session = await getSessionOrNull(res);
+export const extractSession = async (res: Response): Promise<Session> => {
+  const session = await extractSessionOrNull(res);
   if (session === null) {
     throw new Error("Session not found");
   }

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import prisma from "../db";
-import { getSession, isAuthed } from "../middleware/session.middleware";
+import { extractSession, isAuthed } from "../middleware/session.middleware";
 import { friendsService } from "../services/friends.service";
 
 export const userRouter = Router();
@@ -8,7 +8,7 @@ userRouter.use(isAuthed(true));
 
 userRouter.post("/change-avatar", async (req, res) => {
   const { s3key } = req.body;
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const user = await prisma.user.update({
     where: { id: session.user.id },
     data: { avatarS3Key: s3key },
@@ -18,7 +18,7 @@ userRouter.post("/change-avatar", async (req, res) => {
 
 userRouter.get("/:id", async (req, res) => {
   const { id: qUserId } = req.params;
-  const session = await getSession(res);
+  const session = await extractSession(res);
   if (!qUserId) {
     return res.status(400).json({ error: "Missing userId" });
   }

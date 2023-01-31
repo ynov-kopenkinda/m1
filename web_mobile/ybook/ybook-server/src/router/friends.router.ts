@@ -1,19 +1,19 @@
 import { Router } from "express";
 import prisma from "../db";
-import { getSession, isAuthed } from "../middleware/session.middleware";
+import { extractSession, isAuthed } from "../middleware/session.middleware";
 import { friendsService } from "../services/friends.service";
 
 export const friendsRouter = Router();
 friendsRouter.use(isAuthed(true));
 
 friendsRouter.get("/", async (req, res) => {
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const friends = await friendsService.getFriends(session.email);
   return res.json(friends);
 });
 
 friendsRouter.get("/suggested", async (req, res) => {
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const friends = await friendsService.getFriends(session.email);
   const exclude = friends.map((friend) => friend.id);
   const suggested = await prisma.user.findMany({
@@ -25,7 +25,7 @@ friendsRouter.get("/suggested", async (req, res) => {
 });
 
 friendsRouter.get("/global", async (req, res) => {
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const search = req.query.search as string;
   const friends = await friendsService.getFriends(session.email);
   const exclude = friends.map((friend) => friend.id);
@@ -48,7 +48,7 @@ friendsRouter.get("/global", async (req, res) => {
 });
 
 friendsRouter.post("/", async (req, res) => {
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const { userId: qUserId } = req.body;
   if (!qUserId) {
     return res.status(400).json({ error: "Missing userId" });
@@ -106,7 +106,7 @@ friendsRouter.post("/reject", async (req, res) => {
 
 friendsRouter.delete("/cancel", async (req, res) => {
   const { id: friendId } = req.body;
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const friendship = await prisma.friendship.findFirst({
     where: {
       OR: [
@@ -123,7 +123,7 @@ friendsRouter.delete("/cancel", async (req, res) => {
 });
 
 friendsRouter.get("/requests", async (req, res) => {
-  const session = await getSession(res);
+  const session = await extractSession(res);
   const requests = await friendsService.getRequests(session.email);
   return res.json(requests);
 });
