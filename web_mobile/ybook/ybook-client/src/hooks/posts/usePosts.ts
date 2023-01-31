@@ -1,64 +1,23 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { env } from "../../env";
-import { useAuth } from "../../store/auth.store";
+import { api } from "../../api";
 
-export interface PostsResponse {
-  posts: Post[];
-  page: number;
-  pages: number;
-}
-
-export interface Post {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  htmlContent: string;
-  userId: number;
-  user: User;
-  postComments: PostCommentElement[];
-  postLikes: PostCommentElement[];
-  postAttachments: any[];
-}
-
-export interface PostCommentElement {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  userId: number;
-  postId: number;
-  text?: string;
-  user: User;
-}
-
-export interface User {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  avatarS3Key: null;
-  coverPicS3Key: null;
-  config: null;
-}
-
-export const USE_POSTS_KEY = () => `/posts`;
+export const USE_POSTS_KEY = "USE_POSTS";
 
 export const usePosts = () => {
-  const { token } = useAuth();
-  const fetchPosts = async ({ pageParam = 1 }) =>
-    fetch(`${env.REACT_APP_BACKEND_URL}/posts?page=${pageParam}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((res) => res.json());
+  const fetchPosts = async ({ pageParam = 1 }) => {
+    const [posts, error] = await api.posts.getAll({ page: pageParam });
+    if (error) {
+      throw error;
+    }
+    return posts;
+  };
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isInitialLoading,
-  } = useInfiniteQuery<PostsResponse>([USE_POSTS_KEY()], fetchPosts, {
+  } = useInfiniteQuery([USE_POSTS_KEY], fetchPosts, {
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.page < lastPage.pages) return lastPage.page + 1;
       return false;

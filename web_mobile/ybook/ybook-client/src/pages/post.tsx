@@ -55,7 +55,7 @@ export default function PostPage() {
         <div className="flex justify-between">
           <button
             className="text-md flex items-center py-2 pr-2"
-            onClick={() => like()}
+            onClick={() => like({ postId: post.id })}
           >
             <IconHeart
               stroke={1}

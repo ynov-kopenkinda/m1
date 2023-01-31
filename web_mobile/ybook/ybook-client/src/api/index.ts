@@ -90,19 +90,15 @@ export const api = {
       });
     },
   },
-  users: {
-    getAll(search = "") {
-      return _fetch<types.ApiGetUsersResponse>(
-        `/friends/global?search=${search}`
-      );
-    },
-  },
   posts: {
     getAll({ page = 1 }) {
-      return _fetch(`/posts?page=${page}`);
+      return _fetch<types.ApiGetPostsResponse>(`/posts?page=${page}`);
+    },
+    getOne({ id }: { id: number }) {
+      return _fetch<types.ApiGetPostResponse>(`/posts/${id}`);
     },
     create({ content }: { content: string }) {
-      return _fetch("/posts", {
+      return _fetch<types.ApiCreatePostResponse>("/posts", {
         method: "POST",
         body: JSON.stringify({ content }),
       });
@@ -117,6 +113,13 @@ export const api = {
         method: "POST",
         body: JSON.stringify({ content }),
       });
+    },
+  },
+  users: {
+    getAll(search = "") {
+      return _fetch<types.ApiGetUsersResponse>(
+        `/friends/global?search=${search}`
+      );
     },
   },
   settings: {

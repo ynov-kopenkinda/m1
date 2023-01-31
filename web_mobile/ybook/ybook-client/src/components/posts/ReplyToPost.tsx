@@ -14,8 +14,8 @@ export function ReplyToPost({ postId }: { postId: number }) {
       onSubmit={async (e) => {
         e.preventDefault();
         if (content.trim() === "") return;
-        await reply(content);
-        await setContent("");
+        await reply({ postId, content });
+        setContent("");
       }}
     >
       <div className="flex flex-col">

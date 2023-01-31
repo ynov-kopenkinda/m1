@@ -1,13 +1,13 @@
 import { IconHeart, IconMessage } from "@tabler/icons-react";
 import DOMPurify from "dompurify";
 import { forwardRef } from "react";
-import { type Post } from "../../hooks/posts/usePosts";
 import cx from "classnames";
 import { useSession } from "../../hooks/auth/useSession";
 import { useLikePost } from "../../hooks/posts/useLikePost";
 import { Link } from "react-router-dom";
 import { Avatar } from "../default/Avatar";
 import { useProfilePopup } from "../../store/profile.store";
+import { Post } from "../../api/api.types";
 
 export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
   ({ post }, ref) => {
@@ -42,7 +42,7 @@ export const PostPreview = forwardRef<HTMLDivElement, { post: Post }>(
         <div className="flex justify-between">
           <button
             className="text-md flex items-center py-2 pr-2"
-            onClick={() => like()}
+            onClick={() => like({ postId: post.id })}
           >
             <IconHeart
               stroke={1}

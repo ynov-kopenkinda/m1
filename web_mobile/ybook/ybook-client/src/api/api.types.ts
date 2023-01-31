@@ -27,6 +27,38 @@ export type ApiGetSuggestedFriendsResponse = User[];
 
 export type ApiGetFriendRequestsResponse = User[];
 
+export type ApiCreatePostResponse = Post;
+
+export type ApiGetPostsResponse = {
+  posts: Post[];
+  page: number;
+  pages: number;
+};
+
+export type ApiGetPostResponse = Post;
+
+export type Post = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  htmlContent: string;
+  userId: number;
+  user: User;
+  postComments: PostCommentElement[];
+  postLikes: PostCommentElement[];
+  postAttachments: any[];
+};
+
+export type PostCommentElement = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  userId: number;
+  postId: number;
+  text?: string;
+  user: User;
+};
+
 export type User = {
   id: number;
   createdAt: string;

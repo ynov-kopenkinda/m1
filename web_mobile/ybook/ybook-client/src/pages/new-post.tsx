@@ -32,7 +32,10 @@ export default function NewPostPage() {
         <div className="w-full px-2 pb-2">
           <button
             onClick={async () => {
-              const post = await createPost(markup);
+              const [post, error] = await createPost({ content: markup });
+              if (error) {
+                return;
+              }
               navigate(`/post/${post.id}`);
             }}
             className="flex w-full items-center justify-center gap-2 rounded-md bg-blue-500 p-2 text-white disabled:bg-blue-300 disabled:text-gray-500"

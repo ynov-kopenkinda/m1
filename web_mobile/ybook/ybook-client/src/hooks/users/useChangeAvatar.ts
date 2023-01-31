@@ -21,7 +21,7 @@ export function useChangeAvatar() {
     {
       onSuccess: (user) => {
         queryClient.invalidateQueries([USE_SESSION_KEY()]);
-        queryClient.invalidateQueries([USE_POSTS_KEY()]);
+        queryClient.invalidateQueries([USE_POSTS_KEY]);
       },
     }
   );
