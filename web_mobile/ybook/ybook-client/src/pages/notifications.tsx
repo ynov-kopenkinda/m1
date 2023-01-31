@@ -1,6 +1,6 @@
+import { Notification as NotificationType } from "../api/api.types";
 import { CenterLoader } from "../components/default/Loader";
 import { useNotifications } from "../hooks/notifications/useNotifications";
-import type { Notification as NotificationType } from "../hooks/notifications/useNotifications";
 
 export default function NotificationsPage() {
   const [notifications, areNotificationsLoading] = useNotifications();

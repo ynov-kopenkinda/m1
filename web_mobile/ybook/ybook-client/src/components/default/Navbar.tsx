@@ -2,7 +2,6 @@ import {
   IconHome,
   IconMessage,
   IconPlus,
-  IconUser,
   IconUsers,
 } from "@tabler/icons-react";
 import cx from "classnames";
@@ -30,7 +29,7 @@ export function AppNavbar() {
                   {notifications.length}
                 </span>
               )}
-              <Avatar user={session.user} />
+              <Avatar user={session!.user} />
             </>
           }
         />

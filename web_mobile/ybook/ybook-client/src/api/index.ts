@@ -66,6 +66,9 @@ export const api = {
         method: "POST",
       });
     },
+    getSession() {
+      return _fetch<types.ApiGetSessionResponse>("/auth/session");
+    },
   },
   friends: {
     getAll() {
@@ -128,6 +131,11 @@ export const api = {
         method: "POST",
         body: JSON.stringify({ s3key }),
       });
+    },
+  },
+  notifications: {
+    get() {
+      return _fetch<types.ApiGetNotificationsResponse>("/notifications");
     },
   },
 };

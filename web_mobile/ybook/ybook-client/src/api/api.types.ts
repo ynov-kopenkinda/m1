@@ -37,6 +37,21 @@ export type ApiGetPostsResponse = {
 
 export type ApiGetPostResponse = Post;
 
+export type ApiGetSessionResponse = {
+  session: SessionData | null;
+};
+
+export type ApiGetNotificationsResponse = Notification[];
+
+// Types
+
+export type SessionData = {
+  name: string;
+  surname: string;
+  email: string;
+  user: User;
+};
+
 export type Post = {
   id: number;
   createdAt: string;
@@ -69,4 +84,24 @@ export type User = {
   avatarS3Key: string | null;
   coverPicS3Key: string | null;
   config: null;
+};
+
+export type Notification = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  read: boolean;
+  friendshipId: number;
+  conversationMessageId: null;
+  friendship: Friendship;
+  message: null;
+};
+
+export type Friendship = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+  fromId: number;
+  toId: number;
 };

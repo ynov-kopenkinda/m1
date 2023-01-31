@@ -1,17 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "../../api/api.types";
-
-type SessionData = {
-  name: string;
-  surname: string;
-  email: string;
-  user: User;
-};
+import { api } from "../../api";
+import { ApiGetSessionResponse } from "../../api/api.types";
 
 type SessionResult =
   | {
       status: "success";
-      data: SessionData;
+      data: ApiGetSessionResponse["session"];
     }
   | {
       status: "error";
@@ -22,12 +16,16 @@ type SessionResult =
       data: undefined;
     };
 
-export const USE_SESSION_KEY = () => "/auth/session";
+export const USE_SESSION_KEY = "USE_SESSION";
 
 export function useSession(): SessionResult {
-  const { data, isInitialLoading } = useQuery<{ session: SessionData }>([
-    USE_SESSION_KEY(),
-  ]);
+  const { data, isInitialLoading } = useQuery([USE_SESSION_KEY], async () => {
+    const [session, error] = await api.auth.getSession();
+    if (error) {
+      throw error;
+    }
+    return session;
+  });
 
   if (data === undefined || isInitialLoading) {
     return { status: "loading", data: undefined };

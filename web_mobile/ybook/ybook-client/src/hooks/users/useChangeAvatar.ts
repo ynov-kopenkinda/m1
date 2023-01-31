@@ -7,7 +7,7 @@ export function useChangeAvatar() {
   const queryClient = useQueryClient();
   const { mutateAsync } = useMutation(api.settings.changeAvatar, {
     onSuccess: (user) => {
-      queryClient.invalidateQueries([USE_SESSION_KEY()]);
+      queryClient.invalidateQueries([USE_SESSION_KEY]);
       queryClient.invalidateQueries([USE_POSTS_KEY]);
     },
   });

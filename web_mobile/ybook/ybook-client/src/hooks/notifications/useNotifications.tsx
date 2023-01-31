@@ -1,30 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import { api } from "../../api";
 
-export interface Notification {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  read: boolean;
-  friendshipId: number;
-  conversationMessageId: null;
-  friendship: Friendship;
-  message: null;
-}
-
-export interface Friendship {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-  status: string;
-  fromId: number;
-  toId: number;
-}
-
-const NOTIFICATIONS_KEY = () => "/notifications";
+export const USE_NOTIFICATIONS_KEY = () => "USE_NOTIFICATIONS";
 
 export function useNotifications() {
-  const { data, isLoading } = useQuery<Notification[]>([
-    NOTIFICATIONS_KEY(),
-  ]);
+  const { data, isLoading } = useQuery([USE_NOTIFICATIONS_KEY], async () => {
+    const [notifications, error] = await api.notifications.get();
+    if (error) {
+      throw error;
+    }
+    return notifications;
+  });
   return [data, isLoading] as const;
 }
