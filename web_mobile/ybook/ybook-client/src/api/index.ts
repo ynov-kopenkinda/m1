@@ -19,6 +19,12 @@ async function _fetch<T = unknown>(
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
   try {
+    console.log(
+      `%c>>> API [${options.method || "GET"}]`,
+      "background: #f5df89; color: black; font-weight: bold; padding: 4px;",
+      url,
+      options.body === undefined ? "empty" : JSON.parse(options.body as string)
+    );
     const response = await fetch(`${env.REACT_APP_BACKEND_URL}${url}`, {
       ...options,
       headers: { ...headers, ...options.headers },
@@ -29,7 +35,7 @@ async function _fetch<T = unknown>(
     const data = (await response.json()) as T;
     if (logging) {
       console.log(
-        "%cAPI",
+        `%c<<< API [${options.method || "GET"}]`,
         "background: #3d82f6; color: white; font-weight: bold; padding: 4px;",
         url,
         data
@@ -39,7 +45,7 @@ async function _fetch<T = unknown>(
   } catch (error) {
     if (logging) {
       console.error(
-        "%cAPI",
+        `%c<<< API [${options.method || "GET"}]`,
         "background: #ef4444; color: white; font-weight: bold; padding: 4px;",
         url,
         error

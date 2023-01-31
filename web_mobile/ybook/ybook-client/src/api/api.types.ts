@@ -38,14 +38,14 @@ export type ApiGetPostsResponse = {
 export type ApiGetPostResponse = Post;
 
 export type ApiGetSessionResponse = {
-  session: SessionData | null;
+  session: Session | null;
 };
 
 export type ApiGetNotificationsResponse = Notification[];
 
 // Types
 
-export type SessionData = {
+export type Session = {
   name: string;
   surname: string;
   email: string;
