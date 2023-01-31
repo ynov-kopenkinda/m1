@@ -105,6 +105,7 @@ export const catchAllMiddleware: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- next is required by express
   _next
 ) => {
+  console.log("we got here");
   if (err instanceof ApiError) {
     return res.status(err.code).json(err);
   }

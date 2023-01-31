@@ -87,7 +87,7 @@ export const api = {
       return _fetch<types.ApiGetFriendRequestsResponse>("/friends/requests");
     },
     cancel({ friendId }: { friendId: number }) {
-      return _fetch<types.ApiCancelFriendRequestResponse>("/friends/cancel", {
+      return _fetch<types.ApiCancelFriendRequestResponse>("/friends/", {
         method: "DELETE",
         body: JSON.stringify({ id: friendId }),
       });
