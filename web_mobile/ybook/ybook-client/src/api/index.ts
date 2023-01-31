@@ -9,7 +9,7 @@ const logging = env.NODE_ENV === "development";
 async function _fetch<T = unknown>(
   url: string,
   options: RequestInit = {}
-): Promise<[T, null] | [null, Error]> {
+): Promise<[T, null] | [null, types.ApiError]> {
   if (!url.startsWith("/")) {
     throw new Error("Api URL must start with a /");
   }
@@ -51,7 +51,7 @@ async function _fetch<T = unknown>(
         error
       );
     }
-    return [null, error as Error];
+    return [null, error as types.ApiError];
   }
 }
 

@@ -1,8 +1,9 @@
 import type { User } from "@prisma/client";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
-import type { RequestHandler, Response } from "express";
+import type { Response } from "express";
 import prisma from "../db";
 import { env } from "../env";
+import { ApiError, use } from "./error.middleware";
 
 const verifier = CognitoJwtVerifier.create({
   userPoolId: env.COGNITO_USERPOOL_ID,
@@ -10,8 +11,8 @@ const verifier = CognitoJwtVerifier.create({
   clientId: env.COGNITO_CLIENT_ID,
 });
 
-export const isAuthed: (error: boolean) => RequestHandler =
-  (error) => async (req, res, next) => {
+export const isAuthed = (error: boolean) =>
+  use(async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (token === undefined) {
       if (error) {
@@ -34,7 +35,7 @@ export const isAuthed: (error: boolean) => RequestHandler =
       }
       return next();
     }
-  };
+  });
 
 type Session = {
   user: User;
@@ -65,7 +66,7 @@ export const extractSessionOrNull = async (
 export const extractSession = async (res: Response): Promise<Session> => {
   const session = await extractSessionOrNull(res);
   if (session === null) {
-    throw new Error("Session not found");
+    throw new ApiError(401, "Unauthorized");
   }
   return session;
 };

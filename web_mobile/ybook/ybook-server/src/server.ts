@@ -5,6 +5,7 @@ import * as http from "http";
 import { Server } from "socket.io";
 import { env } from "./env";
 import { appRouter } from "./router";
+import { catchAllMiddleware, notFoundMiddleware } from './middleware/error.middleware';
 
 export const app = express();
 export const server = http.createServer(app);
@@ -27,6 +28,10 @@ export const startServer = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/api", appRouter);
+
+  // write error handler here
+  app.use(notFoundMiddleware);
+  app.use(catchAllMiddleware)
 
   server.listen(env.PORT, () => {
     console.log(`Server started on port ${env.PORT} :)`);
