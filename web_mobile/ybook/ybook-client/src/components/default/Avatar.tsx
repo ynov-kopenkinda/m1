@@ -4,6 +4,7 @@ import { DetailedHTMLProps, forwardRef, HTMLAttributes } from "react";
 import cx from "classnames";
 import { useS3Image } from "../../hooks/users/useS3Image";
 import { User } from "../../api/api.types";
+import { S3Image } from "./S3Image";
 
 export const Avatar = forwardRef<
   HTMLImageElement,
@@ -21,11 +22,9 @@ export const Avatar = forwardRef<
     url = avatar.toDataUriSync();
   }
   return (
-    <img
-      {...props}
-      ref={ref}
-      loading="lazy"
-      src={url}
+    <S3Image
+      s3Key={user.avatarS3Key}
+      urlOnLoading={url}
       className={cx("rounded-full", className)}
       alt={fullname}
     />
