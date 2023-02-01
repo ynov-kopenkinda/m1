@@ -1,17 +1,18 @@
 import { IconUpload } from "@tabler/icons-react";
 import { api } from "../../api";
 import { useSession } from "../../hooks/auth/useSession";
-import { useChangeAvatar } from "../../hooks/users/useChangeAvatar";
+import { useChangeImage } from "../../hooks/users/useChangeAvatar";
 import { Avatar } from "../default/Avatar";
 import { CenterLoader } from "../default/Loader";
 
 export function ProfileSettings() {
   const { data: session } = useSession();
-  const updateAvatarKey = useChangeAvatar();
+  const updateAvatarImage = useChangeImage("avatar");
+  const updateCoverImage = useChangeImage("cover");
 
   if (session == null) return <CenterLoader />;
 
-  const chageAvatar = () => {
+  const chageImage = (type: "avatar" | "cover" = "avatar") => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
@@ -28,8 +29,13 @@ export function ProfileSettings() {
           "Content-Type": file.type,
         },
       });
-      if (uploadRes.status === 200) {
-        await updateAvatarKey({ s3key: s3uploadResponse.key });
+      if (uploadRes.status !== 200) {
+        return;
+      }
+      if (type === "cover") {
+        await updateCoverImage({ s3key: s3uploadResponse.key });
+      } else {
+        await updateAvatarImage({ s3key: s3uploadResponse.key });
       }
     };
   };
@@ -44,10 +50,17 @@ export function ProfileSettings() {
         <p className="text-gray-400">{session.user.email}</p>
         <button
           className="flex w-full items-center justify-center gap-2 rounded-md border border-blue-500 text-sm text-blue-500"
-          onClick={() => chageAvatar()}
+          onClick={() => chageImage("avatar")}
         >
           <IconUpload size={16} stroke={1} />
           <span>Change Avatar</span>
+        </button>
+        <button
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-blue-500 text-sm text-blue-500"
+          onClick={() => chageImage("cover")}
+        >
+          <IconUpload size={16} stroke={1} />
+          <span>Change Cover</span>
         </button>
       </div>
     </div>
