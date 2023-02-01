@@ -48,4 +48,23 @@ export const chatroomController = {
     });
     return res.json(conversations);
   },
+  getConversation: async (req, res) => {
+    const id = validateSchema(z.coerce.number(), req.params.id);
+    const session = await extractSession(res);
+    const conversation = await prisma.conversation.findFirst({
+      where: {
+        id,
+        OR: [{ fromId: session.user.id }, { toId: session.user.id }],
+      },
+      include: {
+        from: true,
+        to: true,
+        messages: { orderBy: { createdAt: "asc" } },
+      },
+    });
+    if (!conversation) {
+      throw new ApiError(404, "Conversation not found");
+    }
+    return res.json(conversation);
+  },
 } satisfies ApiController;

@@ -61,6 +61,12 @@ export type ApiGetConversationsResponse = (Chatroom & {
   messages: Message[];
 })[];
 
+export type ApiGetConversationResponse = Chatroom & {
+  from: User;
+  to: User;
+  messages: Message[];
+};
+
 // Types
 
 export type Session = {

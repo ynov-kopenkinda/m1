@@ -157,5 +157,8 @@ export const api = {
     getConversations() {
       return _fetch<types.ApiGetConversationsResponse>("/chatrooms");
     },
+    getConversation({ id }: { id: number }) {
+      return _fetch<types.ApiGetConversationResponse>(`/chatrooms/${id}`);
+    },
   },
 };

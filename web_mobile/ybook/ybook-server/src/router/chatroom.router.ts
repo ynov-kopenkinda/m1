@@ -8,3 +8,4 @@ chatroomRouter.use(isAuthed(true));
 
 chatroomRouter.get("/", use(chatroomController.getConversations));
 chatroomRouter.post("/", use(chatroomController.startConversation));
+chatroomRouter.get("/:id", use(chatroomController.getConversation));
