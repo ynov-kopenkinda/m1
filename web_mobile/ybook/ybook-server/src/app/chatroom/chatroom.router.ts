@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { chatroomController } from "./chatroom.controller";
-import { use } from "../_middlewares/error.middleware";
+import { useApi } from "../_middlewares/error.middleware";
 import { isAuthed } from "../_middlewares/session.middleware";
 
 export const chatroomRouter = Router();
 chatroomRouter.use(isAuthed(true));
 
-chatroomRouter.get("/", use(chatroomController.api_getConversations));
-chatroomRouter.post("/", use(chatroomController.api_startConversation));
-chatroomRouter.get("/:id", use(chatroomController.api_getConversation));
+chatroomRouter.get("/", useApi(chatroomController.api_getConversations));
+chatroomRouter.post("/", useApi(chatroomController.api_startConversation));
+chatroomRouter.get("/:id", useApi(chatroomController.api_getConversation));

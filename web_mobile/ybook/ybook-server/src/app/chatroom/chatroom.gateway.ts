@@ -5,8 +5,8 @@ export const chatroomGateway = {
   authenticate: ["authenticate", chatroomController.gw_authenticate],
   disconnect: [
     "disconnect",
-    (id, data) => {
-      console.log("disconnect", id, data);
+    (socket, data) => {
+      console.log("disconnect", socket.id, data);
     },
   ],
 } satisfies ApiGateway;

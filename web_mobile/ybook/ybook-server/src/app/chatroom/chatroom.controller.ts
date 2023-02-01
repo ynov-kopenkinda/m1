@@ -1,7 +1,10 @@
 import { z } from "zod";
 import prisma from "../../db";
 import { ApiError } from "../_middlewares/error.middleware";
-import { extractSession } from "../_middlewares/session.middleware";
+import {
+  extractSession,
+  getSessionFromToken,
+} from "../_middlewares/session.middleware";
 import { friendsService } from "../friends/friends.service";
 import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
@@ -67,8 +70,10 @@ export const chatroomController = {
     }
     return res.json(conversation);
   },
-  gw_authenticate(id, data) {
+  gw_authenticate(socket, data) {
     const { token } = validateSchema(z.object({ token: z.string() }), data);
-    return; //
+    const session = getSessionFromToken(token);
+    console.log("authenticated", session);
+    socket.emit("authenticated", session);
   },
 } satisfies ApiController;

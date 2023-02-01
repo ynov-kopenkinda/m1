@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+import type { Socket } from "socket.io";
 
 export type ApiController = {
   [key: `api_${string}`]: RequestHandler;
@@ -10,7 +11,7 @@ export type ApiGateway = Record<
   [event: string, handler: GatewayHandler]
 >;
 
-export type GatewayHandler = <T = unknown>(
-  id: string,
-  data: T
+export type GatewayHandler = (
+  socket: Socket,
+  data: unknown
 ) => void | Promise<void>;

@@ -1,4 +1,5 @@
 import type { RequestHandler, ErrorRequestHandler } from "express";
+import type { GatewayHandler } from "../../types";
 
 const HttpErrorMap = {
   200: "OK",
@@ -83,9 +84,21 @@ export class ApiError extends Error {
   }
 }
 
-export function use(fn: RequestHandler): RequestHandler {
+export function useApi(fn: RequestHandler): RequestHandler {
   return (req, res, next) => {
     return Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}
+export function useGateway(fn: GatewayHandler): GatewayHandler {
+  return async (socket, data) => {
+    try {
+      return fn(socket, data);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        socket.emit("error", error);
+      }
+      throw error;
+    }
   };
 }
 
