@@ -1,4 +1,5 @@
 import type { RequestHandler, ErrorRequestHandler } from "express";
+import type { Socket } from "socket.io";
 import type { GatewayHandler } from "../../types";
 
 const HttpErrorMap = {
@@ -89,17 +90,15 @@ export function useApi(fn: RequestHandler): RequestHandler {
     return Promise.resolve(fn(req, res, next)).catch(next);
   };
 }
-export function useGateway(fn: GatewayHandler): GatewayHandler {
-  return async (socket, data) => {
-    try {
-      return fn(socket, data);
-    } catch (error) {
+export function useGateway<T>(fn: GatewayHandler<T>) {
+  return (socket: Socket, data: unknown) =>
+    Promise.resolve(fn(socket, data)).catch((error) => {
       if (error instanceof ApiError) {
         socket.emit("error", error);
+      } else {
+        throw error;
       }
-      throw error;
-    }
-  };
+    });
 }
 
 export const notFoundMiddleware: RequestHandler = (req, res, next) => {

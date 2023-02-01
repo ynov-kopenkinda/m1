@@ -16,7 +16,7 @@ const schema = z.object({
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),
-  PORT: z.string().regex(/^\d+$/).transform(Number).default("3001"),
+  PORT: z.coerce.number().default(3001),
   COGNITO_CLIENT_ID: z.string().min(1),
   COGNITO_USERPOOL_ID: z.string().min(1),
   DATABASE_URL: z.string().url(),

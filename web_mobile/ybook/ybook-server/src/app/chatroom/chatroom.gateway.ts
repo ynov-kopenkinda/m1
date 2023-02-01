@@ -3,10 +3,6 @@ import { chatroomController } from "./chatroom.controller";
 
 export const chatroomGateway = {
   authenticate: ["authenticate", chatroomController.gw_authenticate],
-  disconnect: [
-    "disconnect",
-    (socket, data) => {
-      console.log("disconnect", socket.id, data);
-    },
-  ],
+  deauthenticate: ["deauthenticate", chatroomController.gw_deauthenticate],
+  sendMessage: ["sendMessage", chatroomController.gw_sendMessage],
 } satisfies ApiGateway;

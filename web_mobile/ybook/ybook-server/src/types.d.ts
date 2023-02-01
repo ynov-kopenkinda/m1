@@ -3,15 +3,15 @@ import type { Socket } from "socket.io";
 
 export type ApiController = {
   [key: `api_${string}`]: RequestHandler;
-  [key: `gw_${string}`]: GatewayHandler;
+  [key: `gw_${string}`]: GatewayHandler<unknown>;
 };
 
 export type ApiGateway = Record<
   string,
-  [event: string, handler: GatewayHandler]
+  [event: string, handler: GatewayHandler<unknown>]
 >;
 
-export type GatewayHandler = (
+export type GatewayHandler<T> = (
   socket: Socket,
   data: unknown
-) => void | Promise<void>;
+) => T | Promise<T>;

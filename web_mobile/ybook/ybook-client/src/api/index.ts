@@ -160,5 +160,8 @@ export const api = {
     getConversation({ id }: { id: number }) {
       return _fetch<types.ApiGetConversationResponse>(`/chatrooms/${id}`);
     },
+    getMessages({ id }: { id: number }) {
+      return _fetch<types.ApiGetMessagesResponse>(`/chatrooms/${id}/messages`);
+    },
   },
 };

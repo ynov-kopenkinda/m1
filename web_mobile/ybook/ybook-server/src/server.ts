@@ -18,12 +18,15 @@ export const io = new Server(server, {
   cors: {
     origin: env.CLIENT_APP_URL,
   },
-  transports: ["websocket"],
 });
 
 export const startServer = () => {
   io.on("connection", (socket) => {
+    console.log("TODELETE: Socket connected", socket.id);
     registerGateway(socket, chatroomGateway);
+    socket.on("disconnect", () => {
+      console.log("TODELETE: Socket disconnected", socket.id);
+    });
   });
 
   app.use(helmet());

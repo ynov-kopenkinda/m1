@@ -5,7 +5,7 @@ import { ProfilePreview } from "./ProfilePreview";
 export function AppLayout({ children }: PropsWithChildren) {
   return (
     <>
-      <main className="p-2 pb-24">{children}</main>
+      <main className="flex min-h-screen flex-col p-2 pb-24">{children}</main>
       <AppNavbar />
       <ProfilePreview />
     </>

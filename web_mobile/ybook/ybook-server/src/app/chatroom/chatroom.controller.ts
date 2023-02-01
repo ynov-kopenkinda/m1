@@ -8,6 +8,7 @@ import {
 import { friendsService } from "../friends/friends.service";
 import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
+import { connectionPool, getConnection } from "../_utils/connectionPool";
 
 export const chatroomController = {
   api_startConversation: async (req, res) => {
@@ -70,10 +71,85 @@ export const chatroomController = {
     }
     return res.json(conversation);
   },
-  gw_authenticate(socket, data) {
+  api_getMessages: async (req, res) => {
+    const conversationId = validateSchema(z.coerce.number(), req.params.id);
+    const session = await extractSession(res);
+    const conversation = await prisma.conversation.findFirst({
+      where: {
+        id: conversationId,
+        OR: [{ fromId: session.user.id }, { toId: session.user.id }],
+      },
+    });
+    if (!conversation) {
+      throw new ApiError(404, "Conversation not found");
+    }
+    const messages = await prisma.conversationMessage.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: "asc" },
+      include: { from: true },
+    });
+    return res.json(messages);
+  },
+  gw_authenticate: async (socket, data) => {
     const { token } = validateSchema(z.object({ token: z.string() }), data);
-    const session = getSessionFromToken(token);
-    console.log("authenticated", session);
-    socket.emit("authenticated", session);
+    const session = await getSessionFromToken(token);
+    connectionPool.set(socket.id, session.email);
+    return { email: session.email };
+  },
+  gw_deauthenticate: async (socket) => {
+    connectionPool.delete(socket.id);
+  },
+  gw_sendMessage: async (socket, data) => {
+    const { conversationId, content } = validateSchema(
+      z.object({
+        conversationId: z.coerce.number(),
+        content: z.string(),
+      }),
+      data
+    );
+    const userEmail = getConnection(socket.id);
+    const conversation = await prisma.conversation.findFirst({
+      where: {
+        id: conversationId,
+        OR: [{ from: { email: userEmail } }, { to: { email: userEmail } }],
+      },
+      include: {
+        from: true,
+        to: true,
+      },
+    });
+    if (!conversation) {
+      throw new ApiError(404, "Conversation not found");
+    }
+    const talkingTo =
+      conversation.from.email === userEmail
+        ? conversation.to
+        : conversation.from;
+    if (talkingTo === null) {
+      throw new ApiError(500, "Conversation is missing a user");
+    }
+    const message = await prisma.conversationMessage.create({
+      data: {
+        content,
+        conversation: { connect: { id: conversationId } },
+        from: { connect: { email: userEmail } },
+      },
+      include: {
+        from: true,
+      },
+    });
+    const otherUserSocketId = [...connectionPool.values()].find(
+      (otherUserEmail) => otherUserEmail === talkingTo.email
+    );
+    if (otherUserSocketId) {
+      socket.to(otherUserSocketId).emit("new-message", message);
+    } else {
+      await prisma.notification.create({
+        data: {
+          conversationMessageId: message.id,
+        },
+      });
+    }
+    return message;
   },
 } satisfies ApiController;

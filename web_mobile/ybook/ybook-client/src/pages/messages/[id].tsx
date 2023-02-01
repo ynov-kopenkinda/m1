@@ -29,9 +29,9 @@ export default function ConversationPage() {
       : conversation.from;
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 h-full">
       <div className="relative -mx-2 mb-4 -mt-2 px-2 pt-2">
-        <div className="absolute -z-10 -mt-2 -ml-2 inline-block h-full w-full  after:absolute after:inset-0 after:bg-black/60">
+        <div className="absolute -z-10 -mt-2 -ml-2 inline-block h-full w-full after:absolute after:inset-0 after:bg-black/60">
           <S3Image
             s3Key={talkingTo.coverPicS3Key}
             fallbackUrl={DEFAULT_COVER_PIC}
@@ -44,8 +44,8 @@ export default function ConversationPage() {
           </Link>
           Chatroom #{id}
         </h1>
-        <ChatWindow />
       </div>
+      <ChatWindow chatroomId={id!} />
     </div>
   );
 }
