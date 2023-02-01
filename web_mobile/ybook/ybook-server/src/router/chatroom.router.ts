@@ -6,4 +6,5 @@ import { isAuthed } from "../middleware/session.middleware";
 export const chatroomRouter = Router();
 chatroomRouter.use(isAuthed(true));
 
-chatroomRouter.post("/", use(chatroomController.createRoom));
+chatroomRouter.get("/", use(chatroomController.getConversations));
+chatroomRouter.post("/", use(chatroomController.startConversation));

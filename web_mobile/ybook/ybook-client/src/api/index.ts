@@ -147,4 +147,12 @@ export const api = {
       return _fetch<types.ApiGetNotificationsResponse>("/notifications");
     },
   },
+  chatrooms: {
+    startConversation({ withUserId }: { withUserId: number }) {
+      return _fetch<types.ApiStartConversationResponse>("/chatrooms/", {
+        method: "POST",
+        body: JSON.stringify({ userId: withUserId }),
+      });
+    },
+  },
 };

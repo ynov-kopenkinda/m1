@@ -15,4 +15,4 @@ appRouter.use("/friends", friendsRouter);
 appRouter.use("/notifications", notificationsRouter);
 appRouter.use("/users", userRouter);
 appRouter.use("/s3", s3uploadRouter);
-appRouter.use("/chatroom", chatroomRouter);
+appRouter.use("/chatrooms", chatroomRouter);

@@ -6,8 +6,10 @@ import {
   IconUserX,
 } from "@tabler/icons-react";
 import cx from "classnames";
+import { useNavigate } from "react-router-dom";
 import { Session, User } from "../../api/api.types";
 import { useSession } from "../../hooks/auth/useSession";
+import { useStartConversation } from "../../hooks/chatrooms/useStartConversation";
 import { useRemoveFriendship } from "../../hooks/friends/useRemoveFriendship";
 import { useSendFriendRequest } from "../../hooks/friends/useSendFriendRequest";
 import { useDetailedUser } from "../../hooks/users/useDetailedUser";
@@ -194,8 +196,21 @@ function UnblockUserButton({ user }: { user: User }) {
 }
 
 function SendMessageButton({ user }: { user: User }) {
+  const startConversation = useStartConversation(user.id);
+  const { close } = useProfilePopup();
+  const navigate = useNavigate();
   return (
-    <button className="flex items-center gap-2 rounded border border-blue-500 p-2 text-sm text-blue-500">
+    <button
+      className="flex items-center gap-2 rounded border border-blue-500 p-2 text-sm text-blue-500"
+      onClick={async () => {
+        const [data, error] = await startConversation();
+        if (error) {
+          return;
+        }
+        navigate(`/messages/${data?.id}`);
+        close();
+      }}
+    >
       <IconMessage stroke={1} />
     </button>
   );
