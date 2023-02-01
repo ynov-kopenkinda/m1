@@ -8,7 +8,7 @@ import { validateSchema } from "../utils/validateSchema";
 
 export const userController = {
   changeAvatar: async (req, res) => {
-    const { s3Key } = validateSchema(z.object({ s3Key: z.string() }), req.body);
+    const s3Key = validateSchema(z.string(), req.body.s3key);
     const session = await extractSession(res);
     const user = await prisma.user.update({
       where: { id: session.user.id },

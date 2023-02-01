@@ -84,13 +84,8 @@ export class ApiError extends Error {
 }
 
 export function use(fn: RequestHandler): RequestHandler {
-  return async (req, res, next) => {
-    try {
-      // Typescript doesn't know that the function might be async, so we await it just in case
-      await fn(req, res, next);
-    } catch (error) {
-      next(error);
-    }
+  return (req, res, next) => {
+    return Promise.resolve(fn(req, res, next)).catch(next);
   };
 }
 
@@ -105,7 +100,6 @@ export const catchAllMiddleware: ErrorRequestHandler = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- next is required by express
   _next
 ) => {
-  console.log("we got here");
   if (err instanceof ApiError) {
     return res.status(err.code).json(err);
   }

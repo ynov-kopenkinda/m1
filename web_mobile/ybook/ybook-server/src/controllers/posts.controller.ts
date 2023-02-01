@@ -7,7 +7,7 @@ import { validateSchema } from "../utils/validateSchema";
 
 export const postsController = {
   getPosts: async (req, res) => {
-    const page = validateSchema(z.coerce.number().min(1), req.query);
+    const page = validateSchema(z.coerce.number().min(1), req.query.page);
     const limit = 10;
     const offset = (page - 1) * limit;
     const count = await prisma.post.count();

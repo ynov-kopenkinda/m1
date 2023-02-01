@@ -11,10 +11,7 @@ export const s3Controller = {
     return res.json({ url, key });
   },
   getFromS3: async (req, res) => {
-    const { s3Key } = validateSchema(
-      z.object({ s3Key: z.string() }),
-      req.query
-    );
+    const s3Key = validateSchema(z.string(), req.query.s3key);
     const url = await s3.getSignedGetUrl(s3Key);
     return res.json({ url });
   },
