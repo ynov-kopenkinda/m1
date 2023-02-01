@@ -1,16 +1,13 @@
+import { z } from "zod";
 import prisma from "../db";
 import { ApiError } from "../middleware/error.middleware";
 import { extractSession } from "../middleware/session.middleware";
 import type { ApiController } from "../types";
-import { assertNumber } from "../utils/assertions";
+import { validateSchema } from "../utils/validateSchema";
 
 export const postsController = {
   getPosts: async (req, res) => {
-    const page = parseInt(req.query.page as string) || 1;
-    assertNumber(page);
-    if (page < 1) {
-      throw new ApiError(400, "Page must be greater than 0");
-    }
+    const page = validateSchema(z.coerce.number().min(1), req.query);
     const limit = 10;
     const offset = (page - 1) * limit;
     const count = await prisma.post.count();
@@ -36,8 +33,7 @@ export const postsController = {
     });
   },
   getPost: async (req, res) => {
-    const postId = parseInt(req.params.postId, 10);
-    assertNumber(postId);
+    const postId = validateSchema(z.coerce.number(), req.params.postId);
     const post = await prisma.post.findUnique({
       where: { id: postId },
       include: {
@@ -55,11 +51,8 @@ export const postsController = {
     return res.json(post);
   },
   createPost: async (req, res) => {
+    const content = validateSchema(z.string(), req.body.content);
     const session = await extractSession(res);
-    const { content } = req.body;
-    if (typeof content !== "string") {
-      throw new ApiError(400, "Content must be a string");
-    }
     const post = await prisma.post.create({
       data: {
         htmlContent: content,
@@ -69,8 +62,7 @@ export const postsController = {
     return res.json(post);
   },
   likePost: async (req, res) => {
-    const postId = parseInt(req.params.postId, 10);
-    assertNumber(postId);
+    const postId = validateSchema(z.coerce.number(), req.params.postId);
     const session = await extractSession(res);
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -101,9 +93,8 @@ export const postsController = {
     return res.json({ success: true });
   },
   replyToPost: async (req, res) => {
+    const postId = validateSchema(z.coerce.number(), req.params.postId);
     const session = await extractSession(res);
-    const postId = parseInt(req.params.postId);
-    assertNumber(postId);
     const { content } = req.body;
     if (typeof content !== "string") {
       throw new ApiError(400, "Content must be a string");

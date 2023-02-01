@@ -1,13 +1,13 @@
+import { z } from "zod";
 import { ApiError } from "../middleware/error.middleware";
 import { extractSession } from "../middleware/session.middleware";
 import { friendsService } from "../services/friends.service";
 import type { ApiController } from "../types";
-import { assertNumber } from "../utils/assertions";
+import { validateSchema } from "../utils/validateSchema";
 
 export const chatroomController = {
   createRoom: async (req, res) => {
-    const { userId } = req.body;
-    assertNumber(userId);
+    const userId = validateSchema(z.coerce.number(), req.body.userId);
     const session = await extractSession(res);
     const friends = await friendsService.getFriends(session.email);
     if (!friends.map((friend) => friend.id).includes(userId)) {

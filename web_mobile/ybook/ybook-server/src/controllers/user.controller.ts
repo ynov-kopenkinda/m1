@@ -1,27 +1,23 @@
+import { z } from "zod";
 import prisma from "../db";
 import { ApiError } from "../middleware/error.middleware";
 import { extractSession } from "../middleware/session.middleware";
 import { friendsService } from "../services/friends.service";
 import type { ApiController } from "../types";
-import { assertNumber } from "../utils/assertions";
+import { validateSchema } from "../utils/validateSchema";
 
 export const userController = {
   changeAvatar: async (req, res) => {
-    const { s3key } = req.body;
-    if (typeof s3key !== "string") {
-      throw new ApiError(400, "s3key must be a string");
-    }
+    const { s3Key } = validateSchema(z.object({ s3Key: z.string() }), req.body);
     const session = await extractSession(res);
     const user = await prisma.user.update({
       where: { id: session.user.id },
-      data: { avatarS3Key: s3key },
+      data: { avatarS3Key: s3Key },
     });
     return res.json({ user });
   },
   getDetails: async (req, res) => {
-    const { id: qUserId } = req.params;
-    const userId = parseInt(qUserId, 10);
-    assertNumber(userId);
+    const userId = validateSchema(z.coerce.number(), req.params.id);
     const session = await extractSession(res);
     const user = await prisma.user.findUnique({
       where: { id: userId },
