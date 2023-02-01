@@ -9,6 +9,8 @@ import {
   catchAllMiddleware,
   notFoundMiddleware,
 } from "./app/_middlewares/error.middleware";
+import { registerGateway } from "./app/_utils/registerGateway";
+import { chatroomGateway } from "./app/chatroom/chatroom.gateway";
 
 export const app = express();
 export const server = http.createServer(app);
@@ -21,10 +23,7 @@ export const io = new Server(server, {
 
 export const startServer = () => {
   io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
-    socket.on("disconnect", () => {
-      console.log("user disconnected", socket.id);
-    });
+    registerGateway(socket, chatroomGateway);
   });
 
   app.use(helmet());

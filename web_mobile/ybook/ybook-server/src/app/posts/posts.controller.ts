@@ -6,7 +6,7 @@ import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
 
 export const postsController = {
-  getPosts: async (req, res) => {
+  api_getPosts: async (req, res) => {
     const page = validateSchema(z.coerce.number().min(1), req.query.page);
     const limit = 10;
     const offset = (page - 1) * limit;
@@ -32,7 +32,7 @@ export const postsController = {
       pages: Math.ceil(count / limit),
     });
   },
-  getPost: async (req, res) => {
+  api_getPost: async (req, res) => {
     const postId = validateSchema(z.coerce.number(), req.params.postId);
     const post = await prisma.post.findUnique({
       where: { id: postId },
@@ -50,7 +50,7 @@ export const postsController = {
     }
     return res.json(post);
   },
-  createPost: async (req, res) => {
+  api_createPost: async (req, res) => {
     const content = validateSchema(z.string(), req.body.content);
     const session = await extractSession(res);
     const post = await prisma.post.create({
@@ -61,7 +61,7 @@ export const postsController = {
     });
     return res.json(post);
   },
-  likePost: async (req, res) => {
+  api_likePost: async (req, res) => {
     const postId = validateSchema(z.coerce.number(), req.params.postId);
     const session = await extractSession(res);
     const post = await prisma.post.findUnique({
@@ -92,7 +92,7 @@ export const postsController = {
     }
     return res.json({ success: true });
   },
-  replyToPost: async (req, res) => {
+  api_replyToPost: async (req, res) => {
     const postId = validateSchema(z.coerce.number(), req.params.postId);
     const session = await extractSession(res);
     const { content } = req.body;

@@ -7,7 +7,7 @@ import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
 
 export const userController = {
-  changeAvatar: async (req, res) => {
+  api_changeAvatar: async (req, res) => {
     const s3Key = validateSchema(z.string(), req.body.s3key);
     const session = await extractSession(res);
     const user = await prisma.user.update({
@@ -16,7 +16,7 @@ export const userController = {
     });
     return res.json({ user });
   },
-  changeCover: async (req, res) => {
+  api_changeCover: async (req, res) => {
     const s3Key = validateSchema(z.string(), req.body.s3key);
     const session = await extractSession(res);
     const user = await prisma.user.update({
@@ -25,7 +25,7 @@ export const userController = {
     });
     return res.json({ user });
   },
-  getDetails: async (req, res) => {
+  api_getDetails: async (req, res) => {
     const userId = validateSchema(z.coerce.number(), req.params.id);
     const session = await extractSession(res);
     const user = await prisma.user.findUnique({

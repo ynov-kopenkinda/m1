@@ -3,7 +3,7 @@ import { extractSession } from "../_middlewares/session.middleware";
 import type { ApiController } from "../../types";
 
 export const notificationsController = {
-  getNotifications: async (req, res) => {
+  api_getNotifications: async (req, res) => {
     const session = await extractSession(res);
     const notifications = await prisma.notification.findMany({
       where: {

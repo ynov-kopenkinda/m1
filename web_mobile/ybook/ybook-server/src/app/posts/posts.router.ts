@@ -7,8 +7,8 @@ export const postsRouter = Router();
 
 postsRouter.use(isAuthed(true));
 
-postsRouter.get("/", use(postsController.getPosts));
-postsRouter.post("/", use(postsController.createPost));
-postsRouter.get("/:postId", use(postsController.getPost));
-postsRouter.post("/:postId/like", use(postsController.likePost));
-postsRouter.post("/:postId/reply", use(postsController.replyToPost));
+postsRouter.get("/", use(postsController.api_getPosts));
+postsRouter.post("/", use(postsController.api_createPost));
+postsRouter.get("/:postId", use(postsController.api_getPost));
+postsRouter.post("/:postId/like", use(postsController.api_likePost));
+postsRouter.post("/:postId/reply", use(postsController.api_replyToPost));

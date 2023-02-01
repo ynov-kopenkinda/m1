@@ -7,12 +7,12 @@ import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
 
 export const friendsController = {
-  getFriends: async (req, res) => {
+  api_getFriends: async (req, res) => {
     const session = await extractSession(res);
     const friends = await friendsService.getFriends(session.email);
     return res.json(friends);
   },
-  getSuggested: async (req, res) => {
+  api_getSuggested: async (req, res) => {
     const session = await extractSession(res);
     const friends = await friendsService.getFriends(session.email);
     const exclude = friends.map((friend) => friend.id);
@@ -23,7 +23,7 @@ export const friendsController = {
     });
     return res.json(suggested);
   },
-  getOthers: async (req, res) => {
+  api_getOthers: async (req, res) => {
     const search = validateSchema(z.string(), req.query.search);
     const session = await extractSession(res);
     const friends = await friendsService.getFriends(session.email);
@@ -45,7 +45,7 @@ export const friendsController = {
     });
     return res.json(suggested);
   },
-  sendOrAcceptFriendRequest: async (req, res) => {
+  api_sendOrAcceptFriendRequest: async (req, res) => {
     const userId = validateSchema(z.coerce.number(), req.body.userId);
     const session = await extractSession(res);
     if (userId === session.user.id) {
@@ -79,7 +79,7 @@ export const friendsController = {
     });
     return res.json({ success: true });
   },
-  removeOrRejectFriendRequest: async (req, res) => {
+  api_removeOrRejectFriendRequest: async (req, res) => {
     const friendId = validateSchema(z.coerce.number(), req.body.id);
     const session = await extractSession(res);
     const friendship = await prisma.friendship.findFirst({
@@ -96,7 +96,7 @@ export const friendsController = {
     await prisma.friendship.delete({ where: { id: friendship.id } });
     return res.json({ success: true });
   },
-  getFriendRequests: async (req, res) => {
+  api_getFriendRequests: async (req, res) => {
     const session = await extractSession(res);
     const requests = await friendsService.getRequests(session.email);
     return res.json(requests);

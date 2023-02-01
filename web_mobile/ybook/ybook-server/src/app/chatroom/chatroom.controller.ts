@@ -7,7 +7,7 @@ import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
 
 export const chatroomController = {
-  startConversation: async (req, res) => {
+  api_startConversation: async (req, res) => {
     const userId = validateSchema(z.coerce.number(), req.body.userId);
     const session = await extractSession(res);
     const friends = await friendsService.getFriends(session.email);
@@ -33,7 +33,7 @@ export const chatroomController = {
     });
     return res.json(chatroom);
   },
-  getConversations: async (req, res) => {
+  api_getConversations: async (req, res) => {
     const session = await extractSession(res);
     const conversations = await prisma.conversation.findMany({
       where: {
@@ -48,7 +48,7 @@ export const chatroomController = {
     });
     return res.json(conversations);
   },
-  getConversation: async (req, res) => {
+  api_getConversation: async (req, res) => {
     const id = validateSchema(z.coerce.number(), req.params.id);
     const session = await extractSession(res);
     const conversation = await prisma.conversation.findFirst({
@@ -66,5 +66,9 @@ export const chatroomController = {
       throw new ApiError(404, "Conversation not found");
     }
     return res.json(conversation);
+  },
+  gw_authenticate(id, data) {
+    const { token } = validateSchema(z.object({ token: z.string() }), data);
+    return; //
   },
 } satisfies ApiController;

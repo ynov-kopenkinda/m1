@@ -6,6 +6,6 @@ import { isAuthed } from "../_middlewares/session.middleware";
 export const userRouter = Router();
 userRouter.use(isAuthed(true));
 
-userRouter.post("/change-avatar", use(userController.changeAvatar));
-userRouter.post("/change-cover", use(userController.changeCover));
-userRouter.get("/:id", use(userController.getDetails));
+userRouter.post("/change-avatar", use(userController.api_changeAvatar));
+userRouter.post("/change-cover", use(userController.api_changeCover));
+userRouter.get("/:id", use(userController.api_getDetails));

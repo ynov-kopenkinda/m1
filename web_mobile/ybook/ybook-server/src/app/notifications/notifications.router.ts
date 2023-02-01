@@ -6,4 +6,4 @@ import { isAuthed } from "../_middlewares/session.middleware";
 export const notificationsRouter = Router();
 notificationsRouter.use(isAuthed(true));
 
-notificationsRouter.get("/", use(notificationsController.getNotifications));
+notificationsRouter.get("/", use(notificationsController.api_getNotifications));

@@ -11,6 +11,16 @@ const verifier = CognitoJwtVerifier.create({
   clientId: env.COGNITO_CLIENT_ID,
 });
 
+export const getSessionFromToken = async (token: string) => {
+  const session = await verifier.verify(token);
+  const sessionData = {
+    name: session.name as string,
+    surname: session.given_name as string,
+    email: session.email as string,
+  };
+  return sessionData;
+};
+
 export const isAuthed = (error: boolean) =>
   use(async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1];
@@ -21,12 +31,7 @@ export const isAuthed = (error: boolean) =>
       return next();
     }
     try {
-      const session = await verifier.verify(token);
-      const sessionData = {
-        name: session.name as string,
-        surname: session.given_name as string,
-        email: session.email as string,
-      };
+      const sessionData = await getSessionFromToken(token);
       res.locals.session = sessionData;
       return next();
     } catch (e) {
