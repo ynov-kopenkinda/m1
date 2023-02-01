@@ -1,6 +1,7 @@
 import { IconChevronLeft } from "@tabler/icons-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { z } from "zod";
+import { ChatWindow } from "../../components/chatroom/Chat";
 import { CenterLoader } from "../../components/default/Loader";
 import { S3Image } from "../../components/default/S3Image";
 import { useSession } from "../../hooks/auth/useSession";
@@ -43,6 +44,7 @@ export default function ConversationPage() {
           </Link>
           Chatroom #{id}
         </h1>
+        <ChatWindow />
       </div>
     </div>
   );
