@@ -1,8 +1,8 @@
 import type { User } from "@prisma/client";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
 import type { Response } from "express";
-import prisma from "../db";
-import { env } from "../env";
+import prisma from "../../db";
+import { env } from "../../env";
 import { ApiError, use } from "./error.middleware";
 
 const verifier = CognitoJwtVerifier.create({

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { notificationsController } from "../controllers/notifications.controller";
-import { use } from "../middleware/error.middleware";
-import { isAuthed } from "../middleware/session.middleware";
+import { notificationsController } from "./notifications.controller";
+import { use } from "../_middlewares/error.middleware";
+import { isAuthed } from "../_middlewares/session.middleware";
 
 export const notificationsRouter = Router();
 notificationsRouter.use(isAuthed(true));

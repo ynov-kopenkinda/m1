@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { friendsController } from "../controllers/friends.controller";
-import { use } from "../middleware/error.middleware";
-import { isAuthed } from "../middleware/session.middleware";
+import { friendsController } from "./friends.controller";
+import { use } from "../_middlewares/error.middleware";
+import { isAuthed } from "../_middlewares/session.middleware";
 
 export const friendsRouter = Router();
 friendsRouter.use(isAuthed(true));

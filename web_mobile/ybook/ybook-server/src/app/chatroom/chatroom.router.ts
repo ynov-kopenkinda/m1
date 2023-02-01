@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { chatroomController } from "../controllers/chatroom.controller";
-import { use } from "../middleware/error.middleware";
-import { isAuthed } from "../middleware/session.middleware";
+import { chatroomController } from "./chatroom.controller";
+import { use } from "../_middlewares/error.middleware";
+import { isAuthed } from "../_middlewares/session.middleware";
 
 export const chatroomRouter = Router();
 chatroomRouter.use(isAuthed(true));

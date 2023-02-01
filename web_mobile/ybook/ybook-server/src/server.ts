@@ -4,18 +4,26 @@ import * as cors from "cors";
 import * as http from "http";
 import { Server } from "socket.io";
 import { env } from "./env";
-import { appRouter } from "./router";
-import { catchAllMiddleware, notFoundMiddleware } from './middleware/error.middleware';
+import { appRouter } from "./app/router";
+import {
+  catchAllMiddleware,
+  notFoundMiddleware,
+} from "./app/_middlewares/error.middleware";
 
 export const app = express();
 export const server = http.createServer(app);
-export const io = new Server(server);
+export const io = new Server(server, {
+  cors: {
+    origin: env.CLIENT_APP_URL,
+  },
+  transports: ["websocket"],
+});
 
 export const startServer = () => {
   io.on("connection", (socket) => {
-    console.log("a user connected");
+    console.log("a user connected", socket.id);
     socket.on("disconnect", () => {
-      console.log("user disconnected");
+      console.log("user disconnected", socket.id);
     });
   });
 
@@ -31,7 +39,7 @@ export const startServer = () => {
 
   // write error handler here
   app.use(notFoundMiddleware);
-  app.use(catchAllMiddleware)
+  app.use(catchAllMiddleware);
 
   server.listen(env.PORT, () => {
     console.log(`Server started on port ${env.PORT} :)`);

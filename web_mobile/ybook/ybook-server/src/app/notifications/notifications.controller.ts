@@ -1,6 +1,6 @@
-import prisma from "../db";
-import { extractSession } from "../middleware/session.middleware";
-import type { ApiController } from "../types";
+import prisma from "../../db";
+import { extractSession } from "../_middlewares/session.middleware";
+import type { ApiController } from "../../types";
 
 export const notificationsController = {
   getNotifications: async (req, res) => {

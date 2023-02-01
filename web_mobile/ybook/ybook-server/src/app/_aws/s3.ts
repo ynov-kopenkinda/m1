@@ -1,7 +1,7 @@
 import * as aws from "@aws-sdk/client-s3";
 import * as s3RequestPresigner from "@aws-sdk/s3-request-presigner";
 import type { User } from "@prisma/client";
-import { env } from "../env";
+import { env } from "../../env";
 
 export const s3client = new aws.S3({
   region: env.AWS_S3_REGION,

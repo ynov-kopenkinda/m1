@@ -1,9 +1,9 @@
-import prisma from "../db";
+import prisma from "../../db";
 import {
   extractSession,
   extractSessionOrNull,
-} from "../middleware/session.middleware";
-import type { ApiController } from "../types";
+} from "../_middlewares/session.middleware";
+import type { ApiController } from "../../types";
 
 export const authController = {
   getSession: async (req, res) => {

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { s3Controller } from "../controllers/s3.controller";
-import { use } from "../middleware/error.middleware";
-import { isAuthed } from "../middleware/session.middleware";
+import { s3Controller } from "./s3.controller";
+import { use } from "../_middlewares/error.middleware";
+import { isAuthed } from "../_middlewares/session.middleware";
 
 export const s3uploadRouter = Router();
 s3uploadRouter.use(isAuthed(true));

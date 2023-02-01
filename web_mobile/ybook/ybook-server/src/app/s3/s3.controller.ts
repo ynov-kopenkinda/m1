@@ -1,7 +1,7 @@
-import { extractSession } from "../middleware/session.middleware";
-import type { ApiController } from "../types";
-import * as s3 from "../aws/s3";
-import { validateSchema } from "../utils/validateSchema";
+import { extractSession } from "../_middlewares/session.middleware";
+import type { ApiController } from "../../types";
+import * as s3 from "../_aws/s3";
+import { validateSchema } from "../_utils/validateSchema";
 import { z } from "zod";
 
 export const s3Controller = {

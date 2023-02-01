@@ -1,9 +1,9 @@
 import { z } from "zod";
-import prisma from "../db";
-import { ApiError } from "../middleware/error.middleware";
-import { extractSession } from "../middleware/session.middleware";
-import type { ApiController } from "../types";
-import { validateSchema } from "../utils/validateSchema";
+import prisma from "../../db";
+import { ApiError } from "../_middlewares/error.middleware";
+import { extractSession } from "../_middlewares/session.middleware";
+import type { ApiController } from "../../types";
+import { validateSchema } from "../_utils/validateSchema";
 
 export const postsController = {
   getPosts: async (req, res) => {

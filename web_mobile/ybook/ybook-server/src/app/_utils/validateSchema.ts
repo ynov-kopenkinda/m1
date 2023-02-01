@@ -1,4 +1,4 @@
-import { ApiError } from "../middleware/error.middleware";
+import { ApiError } from "../_middlewares/error.middleware";
 
 export function validateSchema<T>(schema: Zod.Schema<T>, obj: unknown) {
   const result = schema.safeParse(obj);

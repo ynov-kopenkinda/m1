@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { postsController } from "../controllers/posts.controller";
-import { use } from "../middleware/error.middleware";
-import { isAuthed } from "../middleware/session.middleware";
+import { postsController } from "./posts.controller";
+import { use } from "../_middlewares/error.middleware";
+import { isAuthed } from "../_middlewares/session.middleware";
 
 export const postsRouter = Router();
 

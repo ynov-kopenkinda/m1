@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { authController } from "../controllers/auth.controller";
-import { use } from "../middleware/error.middleware";
-import { isAuthed } from "../middleware/session.middleware";
+import { authController } from "./auth.controller";
+import { use } from "../_middlewares/error.middleware";
+import { isAuthed } from "../_middlewares/session.middleware";
 
 export const authRouter = Router();
 
