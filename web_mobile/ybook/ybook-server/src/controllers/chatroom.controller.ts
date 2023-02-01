@@ -42,8 +42,9 @@ export const chatroomController = {
       include: {
         from: true,
         to: true,
-        messages: true,
+        messages: { take: 1, orderBy: { createdAt: "desc" } },
       },
+      distinct: "id",
     });
     return res.json(conversations);
   },

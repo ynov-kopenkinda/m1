@@ -55,6 +55,12 @@ export type ApiChangeAvatarResponse = {
 
 export type ApiStartConversationResponse = Chatroom;
 
+export type ApiGetConversationsResponse = (Chatroom & {
+  from: User;
+  to: User;
+  messages: Message[];
+})[];
+
 // Types
 
 export type Session = {
@@ -118,13 +124,22 @@ export type Friendship = {
   toId: number;
 };
 
-export interface Chatroom {
+export type Chatroom = {
   id: number;
   createdAt: string;
   updatedAt: string;
   fromId: number;
   toId: number;
-}
+};
+
+export type Message = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  conversationId: number;
+  userId: number;
+  content: string;
+};
 
 // Error types
 

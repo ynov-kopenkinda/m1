@@ -154,5 +154,8 @@ export const api = {
         body: JSON.stringify({ userId: withUserId }),
       });
     },
+    getConversations() {
+      return _fetch<types.ApiGetConversationsResponse>("/chatrooms");
+    },
   },
 };
