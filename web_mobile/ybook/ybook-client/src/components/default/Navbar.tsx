@@ -5,14 +5,19 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import cx from "classnames";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSession } from "../../hooks/auth/useSession";
 import { useNotifications } from "../../hooks/notifications/useNotifications";
 import { Avatar } from "./Avatar";
 
 export function AppNavbar() {
   const { data: session, status } = useSession();
+  const location = useLocation();
   const [notifications] = useNotifications();
+  const isMessagesPage = location.pathname.match(/\/messages\/\d/);
+  if (isMessagesPage !== null) {
+    return null;
+  }
   return (
     <div className="fixed left-2 right-2 bottom-2 flex h-16 items-center justify-between rounded-full border bg-white/75 px-4 backdrop-blur-sm">
       <NavbarIcon to="/" icon={<IconHome stroke={1} />} />
@@ -42,18 +47,19 @@ function NavbarIcon({ icon: Icon, to }: { icon: JSX.Element; to: string }) {
   const location = useLocation();
   const isActive =
     to === "/" ? location.pathname === to : location.pathname.startsWith(to);
+  const navigate = useNavigate();
   return (
-    <Link to={to}>
-      <div
-        className={cx(
-          "relative flex h-12 w-12 flex-col items-center justify-center rounded-full",
-          {
-            "bg-blue-500 text-white": isActive,
-          }
-        )}
-      >
-        {Icon}
-      </div>
-    </Link>
+    <button
+      onClick={() => navigate(to)}
+      disabled={isActive}
+      className={cx(
+        "relative flex h-12 w-12 flex-col items-center justify-center rounded-full",
+        {
+          "bg-blue-500 text-white": isActive,
+        }
+      )}
+    >
+      {Icon}
+    </button>
   );
 }

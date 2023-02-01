@@ -2,19 +2,19 @@ import { IconHeart, IconMessage } from "@tabler/icons-react";
 import cx from "classnames";
 import DOMPurify from "dompurify";
 import { Navigate, useParams } from "react-router";
-import { Avatar } from "../components/default/Avatar";
-import { Loader } from "../components/default/Loader";
-import { ReplyToPost } from "../components/posts/ReplyToPost";
-import { useSession } from "../hooks/auth/useSession";
-import { useLikePost } from "../hooks/posts/useLikePost";
-import { usePost } from "../hooks/posts/usePost";
-import { useProfilePopup } from "../store/profile.store";
+import { z } from "zod";
+import { Avatar } from "../../components/default/Avatar";
+import { Loader } from "../../components/default/Loader";
+import { ReplyToPost } from "../../components/posts/ReplyToPost";
+import { useSession } from "../../hooks/auth/useSession";
+import { useLikePost } from "../../hooks/posts/useLikePost";
+import { usePost } from "../../hooks/posts/usePost";
+import { useProfilePopup } from "../../store/profile.store";
 
 export default function PostPage() {
-  const { id: _id } = useParams();
-  const id = parseInt(_id as string);
+  const parsedParams = z.coerce.number().safeParse(useParams().id);
+  const id = parsedParams.success ? parsedParams.data : NaN;
   const { isLoading, post } = usePost(Number.isNaN(id) ? undefined : id);
-
   const { data: session } = useSession();
   const like = useLikePost(id);
   const { open } = useProfilePopup();
@@ -24,8 +24,9 @@ export default function PostPage() {
         <Loader />
       </div>
     );
-  if (Number.isNaN(id) || post == null) return <Navigate to="/" />;
-
+  if (!parsedParams.success || post === undefined) {
+    return <Navigate to="/" />;
+  }
   const likedByMe = post.postLikes.some(
     (like) => like.user.email === session?.email
   );

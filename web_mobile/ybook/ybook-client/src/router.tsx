@@ -7,9 +7,10 @@ import FriendsPage from "./pages/friends";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login";
 import MessagesPage from "./pages/messages";
+import ConversationPage from "./pages/messages/[id]";
 import NewPostPage from "./pages/new-post";
 import NotificationsPage from "./pages/notifications";
-import PostPage from "./pages/post";
+import PostPage from "./pages/post/[id]";
 import RegisterPage from "./pages/register";
 import SettingsPage from "./pages/settings";
 import VerifyCodePage from "./pages/verify-code";
@@ -42,6 +43,10 @@ const router = createHashRouter([
       {
         path: "/messages",
         element: <MessagesPage />,
+      },
+      {
+        path: "/messages/:id",
+        element: <ConversationPage />,
       },
     ],
   },

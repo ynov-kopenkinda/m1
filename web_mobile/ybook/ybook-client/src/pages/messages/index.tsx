@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { ApiGetConversationsResponse } from "../api/api.types";
-import { Avatar } from "../components/default/Avatar";
-import { CenterLoader } from "../components/default/Loader";
-import { useSession } from "../hooks/auth/useSession";
-import { useConversations } from "../hooks/chatrooms/useConversations";
+import { ApiGetConversationsResponse } from "../../api/api.types";
+import { Avatar } from "../../components/default/Avatar";
+import { CenterLoader } from "../../components/default/Loader";
+import { useSession } from "../../hooks/auth/useSession";
+import { useConversations } from "../../hooks/chatrooms/useConversations";
 import cx from "classnames";
 import formatRelative from "date-fns/formatRelative";
 
@@ -14,7 +14,10 @@ export default function MessagesPage() {
       <h1 className="mb-4 text-4xl font-black">Messages</h1>
       {loading ? <CenterLoader /> : null}
       {conversations?.map((conversation) => (
-        <ConversationPreview conversation={conversation} />
+        <ConversationPreview
+          conversation={conversation}
+          key={conversation.id}
+        />
       ))}
     </div>
   );
@@ -36,7 +39,7 @@ function ConversationPreview({
     : "No messages yet. Hit them up!";
   return (
     <Link
-      to={`/messages/${talkingTo.id}`}
+      to={`/messages/${conversation.id}`}
       key={conversation.id}
       className="flex gap-2 rounded-md border p-2"
     >
