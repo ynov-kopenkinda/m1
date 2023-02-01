@@ -83,6 +83,23 @@ export const chatroomController = {
     if (!conversation) {
       throw new ApiError(404, "Conversation not found");
     }
+    const conversationMessagesIds = (
+      await prisma.conversationMessage.findMany({
+        where: {
+          conversationId,
+        },
+      })
+    ).map((message) => message.id);
+    await prisma.notification.updateMany({
+      where: {
+        conversationMessageId: {
+          in: conversationMessagesIds,
+        },
+      },
+      data: {
+        read: true,
+      },
+    });
     const messages = await prisma.conversationMessage.findMany({
       where: { conversationId },
       orderBy: { createdAt: "asc" },

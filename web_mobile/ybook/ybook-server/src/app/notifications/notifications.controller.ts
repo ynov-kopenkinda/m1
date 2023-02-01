@@ -19,6 +19,7 @@ export const notificationsController = {
               },
               {
                 message: {
+                  from: { id: { not: session.user.id } },
                   userId: session.user.id,
                 },
               },
