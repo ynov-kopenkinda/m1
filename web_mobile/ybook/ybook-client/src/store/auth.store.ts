@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { env } from "../env";
 
 export interface AuthStore {
   token: string | undefined;
@@ -18,7 +19,9 @@ export const authStore = create(
     }),
     {
       name: "ybook-auth",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() =>
+        env.NODE_ENV === "production" ? localStorage : sessionStorage
+      ),
     }
   )
 );
