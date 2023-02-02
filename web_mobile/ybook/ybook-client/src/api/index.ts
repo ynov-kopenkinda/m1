@@ -19,12 +19,16 @@ async function _fetch<T = unknown>(
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
   try {
-    console.log(
-      `%c>>> API [${options.method || "GET"}]`,
-      "background: #f5df89; color: black; font-weight: bold; padding: 4px;",
-      url,
-      options.body === undefined ? "empty" : JSON.parse(options.body as string)
-    );
+    if (logging) {
+      console.log(
+        `%c>>> API [${options.method || "GET"}]`,
+        "background: #f5df89; color: black; font-weight: bold; padding: 4px;",
+        url,
+        options.body === undefined
+          ? "empty"
+          : JSON.parse(options.body as string)
+      );
+    }
     const response = await fetch(`${env.REACT_APP_BACKEND_URL}${url}`, {
       ...options,
       headers: { ...headers, ...options.headers },
