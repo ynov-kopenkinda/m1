@@ -13,11 +13,11 @@
 ## Accueil
 
 - [x]: Affichage des posts
-- [ ]: Tri des posts (amis uniquement ou recommandés)
+- [x]: Tri des posts (amis uniquement ou recommandés)
 - [x]: Gestion des likes sur les posts
 - [x]: Ajout et lecture des commentaires de posts
 - [-]: Post rapide : rédaction d’un texte et envoi
-- [?]: Gestion des « pièces jointes » sur les posts
+- [-]: Gestion des « pièces jointes » sur les posts
 
 ## Page profil
 

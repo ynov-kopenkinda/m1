@@ -104,8 +104,10 @@ export const api = {
     },
   },
   posts: {
-    getAll({ page = 1 }) {
-      return _fetch<types.ApiGetPostsResponse>(`/posts?page=${page}`);
+    getAll({ page = 1, friendsOnly = false }) {
+      return _fetch<types.ApiGetPostsResponse>(
+        `/posts?page=${page}${friendsOnly ? "&friendsOnly=true" : ""}`
+      );
     },
     getOne({ id }: { id: number }) {
       return _fetch<types.ApiGetPostResponse>(`/posts/${id}`);
@@ -149,7 +151,7 @@ export const api = {
     },
     getBlocked() {
       return _fetch<types.ApiGetBlockedUsersResponse>("/users/blocked");
-    }
+    },
   },
   settings: {
     changeImage({ s3key, type }: { s3key: string; type: "avatar" | "cover" }) {

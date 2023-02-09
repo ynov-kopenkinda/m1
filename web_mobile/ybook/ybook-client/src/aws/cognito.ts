@@ -167,14 +167,19 @@ export async function refreshSession() {
       );
     }
   );
-  const refresh_token = session.getRefreshToken(); // receive session from calling cognitoUser.getSession()
-  return new Promise<void>((res, rej) => {
-    cognitoUser.refreshSession(refresh_token, (err, session) => {
-      if (err) {
-        rej(err);
-      } else {
-        res();
-      }
-    });
-  });
+  const refresh_token = session.getRefreshToken();
+  return new Promise<AmazonCognitoIdentity.CognitoUserSession | undefined>(
+    (res, rej) => {
+      cognitoUser.refreshSession(
+        refresh_token,
+        (err, session: AmazonCognitoIdentity.CognitoUserSession) => {
+          if (err) {
+            res(undefined);
+          } else {
+            res(session);
+          }
+        }
+      );
+    }
+  );
 }

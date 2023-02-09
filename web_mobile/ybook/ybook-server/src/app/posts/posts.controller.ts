@@ -1,17 +1,36 @@
+import type { User } from "@prisma/client";
 import { z } from "zod";
 import prisma from "../../db";
+import type { ApiController } from "../../types";
+import { friendsService } from "../friends/friends.service";
 import { ApiError } from "../_middlewares/error.middleware";
 import { extractSession } from "../_middlewares/session.middleware";
-import type { ApiController } from "../../types";
 import { validateSchema } from "../_utils/validateSchema";
 
 export const postsController = {
   api_getPosts: async (req, res) => {
     const page = validateSchema(z.coerce.number().min(1), req.query.page);
+    const friendsOnly =
+      validateSchema(z.coerce.boolean().optional(), req.query.friendsOnly) ??
+      false;
+    const session = await extractSession(res);
     const limit = 10;
+    let friends: User[] = [];
+    if (friendsOnly) {
+      friends = await friendsService.getFriends(session.email);
+    }
     const offset = (page - 1) * limit;
-    const count = await prisma.post.count();
+    const count = await prisma.post.count(
+      friendsOnly
+        ? {
+            where: {
+              userId: { in: friends.map((f) => f.id) },
+            },
+          }
+        : undefined
+    );
     const posts = await prisma.post.findMany({
+      where: friendsOnly ? { userId: { in: friends.map((f) => f.id) } } : {},
       skip: offset,
       take: limit,
       orderBy: {

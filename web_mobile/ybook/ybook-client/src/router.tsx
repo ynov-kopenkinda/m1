@@ -1,7 +1,9 @@
 import { createHashRouter, RouterProvider } from "react-router-dom";
+import { refreshSession } from "./aws/cognito";
 import { RedirectOnAuth } from "./components/auth/RedirectOnAuth";
 import { RequiresAuth } from "./components/auth/RequiresAuth";
 import { AppLayout } from "./components/default/Layout";
+import { useInterval } from "./hooks/utils/useInterval";
 import ForgotPasswordPage from "./pages/forgot-password";
 import FriendsPage from "./pages/friends";
 import HomePage from "./pages/home";
@@ -14,6 +16,7 @@ import PostPage from "./pages/post/[id]";
 import RegisterPage from "./pages/register";
 import SettingsPage from "./pages/settings";
 import VerifyCodePage from "./pages/verify-code";
+import { authStore, __private__useSetToken } from "./store/auth.store";
 
 const router = createHashRouter([
   {
@@ -93,7 +96,16 @@ router.subscribe((location) => {
   }, 0);
 });
 
+const FIVTEEN_MINUTES = 1_000 * 60 * 15;
+
 const AppRouter = () => {
+  const setToken = __private__useSetToken();
+  useInterval(() => {
+    refreshSession().then((token) => {
+      if (!token) return;
+      setToken(token.getIdToken().getJwtToken());
+    });
+  }, FIVTEEN_MINUTES);
   return <RouterProvider router={router} />;
 };
 
