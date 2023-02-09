@@ -36,11 +36,11 @@ export function login({
   });
 }
 
-export function logout({ email }: { email: string }) {
-  const cognitoUser = new AmazonCognitoIdentity.CognitoUser({
-    Username: email,
-    Pool: userPool,
-  });
+export function logout() {
+  const cognitoUser = userPool.getCurrentUser();
+  if (cognitoUser === null) {
+    return;
+  }
   cognitoUser.signOut();
 }
 
@@ -142,6 +142,39 @@ export async function updatePassword({
       onFailure(err) {
         rej(err);
       },
+    });
+  });
+}
+
+export async function refreshSession() {
+  const cognitoUser = userPool.getCurrentUser();
+  if (cognitoUser === null) {
+    return;
+  }
+  const session = await new Promise<AmazonCognitoIdentity.CognitoUserSession>(
+    (res, rej) => {
+      cognitoUser.getSession(
+        (
+          err: Error | null,
+          session: AmazonCognitoIdentity.CognitoUserSession | null
+        ) => {
+          if (session === null) {
+            rej(err);
+          } else {
+            res(session);
+          }
+        }
+      );
+    }
+  );
+  const refresh_token = session.getRefreshToken(); // receive session from calling cognitoUser.getSession()
+  return new Promise<void>((res, rej) => {
+    cognitoUser.refreshSession(refresh_token, (err, session) => {
+      if (err) {
+        rej(err);
+      } else {
+        res();
+      }
     });
   });
 }

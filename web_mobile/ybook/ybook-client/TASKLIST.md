@@ -1,4 +1,3 @@
-```md
 ## Layout principal
 
 - [x]: Un moyen de navigation (au choix, par exemple : bottom tab ou menu
@@ -17,16 +16,16 @@
 - [ ]: Tri des posts (amis uniquement ou recommandés)
 - [x]: Gestion des likes sur les posts
 - [x]: Ajout et lecture des commentaires de posts
-- [ ]: Post rapide : rédaction d’un texte et envoi
-- [ ]: Gestion des « pièces jointes » sur les posts
+- [-]: Post rapide : rédaction d’un texte et envoi
+- [?]: Gestion des « pièces jointes » sur les posts
 
 ## Page profil
 
+- [-]: Présence d’un mécanisme de filtrage pour visualiser posts, likes, et
+  commentaires
 - [x]: présence d’un header avec avatar, username, nombre d’amis et photo
   de couverture
-- [ ]: Présence d’un mécanisme de filtrage pour visualiser posts, likes, et
-  commentaires
-- [ ]: Accès à la page amis
+- [x]: Accès à la page amis
 
 ## Page amis
 
@@ -38,7 +37,7 @@
 ## Messages privés
 
 - [x]: Une view laisse apparaître la liste des messages
-- [ ]: Présence d’un moyen d’ajout de conversation avec sélection du
+- [x]: Présence d’un moyen d’ajout de conversation avec sélection du
   destinataire (amis uniquement)
 - [x]: Sur la vue de détail de la conversation, affichage de l’interlocuteur et
   visualisation des messages interactive
@@ -47,12 +46,12 @@
 ## Page réglages
 
 - [x]: Moyen de déconnexion
-- [ ]: Gestion des utilisateurs bloqués
+- [x]: Gestion des utilisateurs bloqués
 
 ## Notifications
 
-- [ ]: Demande d’ami
-- [ ]: Nouveau message
+- [x]: Demande d’ami
+- [?]: Nouveau message
 
 ## PWA
 
@@ -63,4 +62,3 @@
 - [ ]: Capacité, l’application devra utiliser des API spécifiques aux PWA (ex :
   Badging API) mais également quelques API « modernes » (ex :
   MediaDevices…)e
-```
