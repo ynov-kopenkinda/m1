@@ -12,16 +12,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.postsController = void 0;
 const zod_1 = require("zod");
 const db_1 = require("../../db");
+const friends_service_1 = require("../friends/friends.service");
 const error_middleware_1 = require("../_middlewares/error.middleware");
 const session_middleware_1 = require("../_middlewares/session.middleware");
 const validateSchema_1 = require("../_utils/validateSchema");
 exports.postsController = {
     api_getPosts: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        var _a;
         const page = (0, validateSchema_1.validateSchema)(zod_1.z.coerce.number().min(1), req.query.page);
+        const friendsOnly = (_a = (0, validateSchema_1.validateSchema)(zod_1.z.coerce.boolean().optional(), req.query.friendsOnly)) !== null && _a !== void 0 ? _a : false;
+        const session = yield (0, session_middleware_1.extractSession)(res);
         const limit = 10;
+        let friends = [];
+        if (friendsOnly) {
+            friends = yield friends_service_1.friendsService.getFriends(session.email);
+        }
         const offset = (page - 1) * limit;
-        const count = yield db_1.default.post.count();
+        const count = yield db_1.default.post.count(friendsOnly
+            ? {
+                where: {
+                    userId: { in: friends.map((f) => f.id) },
+                },
+            }
+            : undefined);
         const posts = yield db_1.default.post.findMany({
+            where: friendsOnly ? { userId: { in: friends.map((f) => f.id) } } : {},
             skip: offset,
             take: limit,
             orderBy: {

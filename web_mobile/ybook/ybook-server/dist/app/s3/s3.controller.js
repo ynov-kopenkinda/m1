@@ -14,6 +14,7 @@ const session_middleware_1 = require("../_middlewares/session.middleware");
 const s3 = require("../_aws/s3");
 const validateSchema_1 = require("../_utils/validateSchema");
 const zod_1 = require("zod");
+const error_middleware_1 = require("../_middlewares/error.middleware");
 exports.s3Controller = {
     api_sendToS3: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const session = yield (0, session_middleware_1.extractSession)(res);
@@ -22,6 +23,9 @@ exports.s3Controller = {
     }),
     api_getFromS3: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const s3Key = (0, validateSchema_1.validateSchema)(zod_1.z.string(), req.query.s3key);
+        if (s3Key === "") {
+            throw new error_middleware_1.ApiError(400, "Invalid s3 key");
+        }
         const url = yield s3.getSignedGetUrl(s3Key);
         return res.json({ url });
     }),
