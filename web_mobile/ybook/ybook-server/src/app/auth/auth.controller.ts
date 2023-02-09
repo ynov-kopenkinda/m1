@@ -6,11 +6,11 @@ import {
 import type { ApiController } from "../../types";
 
 export const authController = {
-  getSession: async (req, res) => {
+  api_getSession: async (req, res) => {
     const session = await extractSessionOrNull(res);
     return res.json({ session });
   },
-  createUser: async (req, res) => {
+  api_createUser: async (req, res) => {
     const session = await extractSession(res);
     const user = await prisma.user.upsert({
       where: {

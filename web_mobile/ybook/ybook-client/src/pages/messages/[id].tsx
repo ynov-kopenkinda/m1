@@ -2,6 +2,7 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { z } from "zod";
 import { ChatWindow } from "../../components/chatroom/Chat";
+import { MessageBox } from "../../components/chatroom/MessageBox";
 import { CenterLoader } from "../../components/default/Loader";
 import { S3Image } from "../../components/default/S3Image";
 import { useSession } from "../../hooks/auth/useSession";
@@ -29,9 +30,9 @@ export default function ConversationPage() {
       : conversation.from;
 
   return (
-    <div className="flex flex-col gap-2 h-full">
-      <div className="relative -mx-2 mb-4 -mt-2 px-2 pt-2">
-        <div className="absolute -z-10 -mt-2 -ml-2 inline-block h-full w-full after:absolute after:inset-0 after:bg-black/60">
+    <div className="flex h-full flex-col gap-2 pt-20">
+      <div className="fixed top-0 left-0 right-0 flex h-16 items-center">
+        <div className="absolute -z-10 inline-block h-full w-full after:absolute after:inset-0 after:bg-black/60 bg-white">
           <S3Image
             s3Key={talkingTo.coverPicS3Key}
             fallbackUrl={DEFAULT_COVER_PIC}
@@ -46,6 +47,7 @@ export default function ConversationPage() {
         </h1>
       </div>
       <ChatWindow chatroomId={id!} />
+      <MessageBox conversationId={id!} />
     </div>
   );
 }

@@ -15,9 +15,25 @@ export const friendsController = {
   api_getSuggested: async (req, res) => {
     const session = await extractSession(res);
     const friends = await friendsService.getFriends(session.email);
-    const exclude = friends.map((friend) => friend.id);
+    const excludeFriends = friends.map((friend) => friend.id);
+    const excludeBlocked = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      include: { blockedUsers: true },
+    });
+    if (excludeBlocked === null) {
+      throw new ApiError(500, "Something went wrong");
+    }
+    const excludeBlockedIds = excludeBlocked.blockedUsers.map(
+      (blockedUser) => blockedUser.id
+    );
     const suggested = await prisma.user.findMany({
-      where: { id: { notIn: exclude.concat(session.user.id) } },
+      where: {
+        id: {
+          notIn: excludeFriends
+            .concat(session.user.id)
+            .concat(excludeBlockedIds),
+        },
+      },
       orderBy: { createdAt: "desc" },
       take: 5,
     });
@@ -100,5 +116,5 @@ export const friendsController = {
     const session = await extractSession(res);
     const requests = await friendsService.getRequests(session.email);
     return res.json(requests);
-  },
+  }
 } satisfies ApiController;

@@ -60,6 +60,18 @@ export const extractSessionOrNull = async (
     where: {
       email: session.email,
     },
+    include: {
+      blockedUsers: {
+        select: {
+          id: true,
+        },
+      },
+      blockedByUsers: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
   if (user === null) {
     return null;

@@ -22,6 +22,8 @@ export const friendsService = {
             ],
           },
           { email: { not: email } },
+          { blockedByUsers: { every: { email: { not: email } } } },
+          { blockedUsers: { every: { email: { not: email } } } },
         ],
       },
     });

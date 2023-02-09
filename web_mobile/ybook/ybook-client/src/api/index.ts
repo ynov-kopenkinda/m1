@@ -137,6 +137,19 @@ export const api = {
     getOne({ id }: { id: number }) {
       return _fetch<types.ApiGetUserResponse>(`/users/${id}`);
     },
+    block({ userId }: { userId: number }) {
+      return _fetch(`/users/${userId}/block`, {
+        method: "POST",
+      });
+    },
+    unblock({ userId }: { userId: number }) {
+      return _fetch(`/users/${userId}/unblock`, {
+        method: "POST",
+      });
+    },
+    getBlocked() {
+      return _fetch<types.ApiGetBlockedUsersResponse>("/users/blocked");
+    }
   },
   settings: {
     changeImage({ s3key, type }: { s3key: string; type: "avatar" | "cover" }) {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BlockedUsers } from "../components/friends/BlockedUsers";
 import { FriendRequests } from "../components/friends/FriendRequests";
 import { GlobalFriendSearch } from "../components/friends/GlobalFriendSearch";
 import { SuggestedFriends } from "../components/friends/SuggestedFriends";
@@ -19,6 +20,7 @@ export default function FriendsPage() {
       />
       {search.length === 0 && <SuggestedFriends />}
       <YourFriends search={search} />
+      {search.length === 0 && <BlockedUsers />}
       {search.length === 0 && <FriendRequests />}
       {search.length > 0 && <GlobalFriendSearch search={search} />}
     </div>

@@ -69,13 +69,18 @@ export type ApiGetConversationResponse = Chatroom & {
 
 export type ApiGetMessagesResponse = (Message & { from: User })[];
 
+export type ApiGetBlockedUsersResponse = { blockedUsers: User[] };
+
 // Types
 
 export type Session = {
   name: string;
   surname: string;
   email: string;
-  user: User;
+  user: User & {
+    blockedUsers: { id: User["id"] }[];
+    blockedByUsers: { id: User["id"] }[];
+  };
 };
 
 export type Post = {

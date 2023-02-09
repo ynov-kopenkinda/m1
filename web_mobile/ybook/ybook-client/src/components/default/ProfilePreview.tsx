@@ -12,7 +12,9 @@ import { useSession } from "../../hooks/auth/useSession";
 import { useStartConversation } from "../../hooks/chatrooms/useStartConversation";
 import { useRemoveFriendship } from "../../hooks/friends/useRemoveFriendship";
 import { useSendFriendRequest } from "../../hooks/friends/useSendFriendRequest";
+import { useBlockUser } from "../../hooks/users/useBlockUser";
 import { useDetailedUser } from "../../hooks/users/useDetailedUser";
+import { useUnblockUser } from "../../hooks/users/useUnblockUser";
 import { useProfilePopup } from "../../store/profile.store";
 import { Avatar } from "./Avatar";
 import { CenterLoader } from "./Loader";
@@ -70,9 +72,9 @@ function ProfilePreviewCardInner({
   const isFriend = details?.friends
     .map((friend) => friend.id)
     .includes(session.user.id);
-  const isBlocked = details?.user?.blockedByUsers
-    .map((u) => u.id)
-    .includes(user.id);
+  const isBlocked =
+    details?.user?.blockedByUsers.map((u) => u.id).includes(user.id) ||
+    session.user.blockedUsers.map((u) => u.id).includes(user.id);
   const isYou = user.id === session.user.id;
   return (
     <>
@@ -180,16 +182,24 @@ function CancelFriendRequestButton({ user }: { user: User }) {
 }
 
 function BlockUserButton({ user }: { user: User }) {
+  const block = useBlockUser(user.id);
   return (
-    <button className="flex items-center gap-2 rounded border border-red-500 p-2 text-sm text-red-500">
+    <button
+      className="flex items-center gap-2 rounded border border-red-500 p-2 text-sm text-red-500"
+      onClick={() => block({ userId: user.id })}
+    >
       <IconUserOff stroke={1} /> Block user
     </button>
   );
 }
 
 function UnblockUserButton({ user }: { user: User }) {
+  const unblock = useUnblockUser(user.id);
   return (
-    <button className="flex items-center gap-2 rounded border border-green-500 p-2 text-sm text-green-500">
+    <button
+      className="flex items-center gap-2 rounded border border-green-500 p-2 text-sm text-green-500"
+      onClick={() => unblock({ userId: user.id })}
+    >
       <IconUserCheck stroke={1} /> Unblock user
     </button>
   );

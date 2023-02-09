@@ -6,10 +6,9 @@ import { useSession } from "../../hooks/auth/useSession";
 import { useLiveMessages } from "../../hooks/chatrooms/useLiveMessages";
 import {
   useMessages,
-  USE_MESSAGES_KEY,
+  USE_MESSAGES_KEY
 } from "../../hooks/chatrooms/useMessages";
 import { CenterLoader } from "../default/Loader";
-import { MessageBox } from "./MessageBox";
 
 export function ChatWindow({ chatroomId }: { chatroomId: number }) {
   const [messages, loading] = useMessages({ chatroomId });
@@ -38,7 +37,6 @@ export function ChatWindow({ chatroomId }: { chatroomId: number }) {
           />
         ))}
       </div>
-      <MessageBox conversationId={chatroomId} />
     </>
   );
 }

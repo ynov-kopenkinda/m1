@@ -53,4 +53,62 @@ export const userController = {
     });
     return res.json({ user, friends, pending: pendingFriendship });
   },
+  api_blockUser: async (req, res) => {
+    const userId = validateSchema(z.coerce.number(), req.params.id);
+    const session = await extractSession(res);
+    const other = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        blockedByUsers: true,
+      },
+    });
+    if (other === null) {
+      throw new ApiError(404, "User not found");
+    }
+    if (other.blockedByUsers.some((u) => u.id === session.user.id)) {
+      throw new ApiError(400, "User already blocked");
+    }
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        blockedUsers: {
+          connect: { id: userId },
+        },
+      },
+    });
+    return res.json({ success: true });
+  },
+  api_unblockUser: async (req, res) => {
+    const userId = validateSchema(z.coerce.number(), req.params.id);
+    const session = await extractSession(res);
+    const other = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        blockedByUsers: true,
+      },
+    });
+    if (other === null) {
+      throw new ApiError(404, "User not found");
+    }
+    if (!other.blockedByUsers.some((u) => u.id === session.user.id)) {
+      throw new ApiError(400, "User not blocked");
+    }
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        blockedUsers: {
+          disconnect: { id: userId },
+        },
+      },
+    });
+    return res.json({ success: true });
+  },
+  api_getBlockedUsers: async (req, res) => {
+    const session = await extractSession(res);
+    const blockedUsers = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { blockedUsers: true },
+    });
+    return res.json({ blockedUsers: blockedUsers?.blockedUsers ?? [] });
+  },
 } satisfies ApiController;
