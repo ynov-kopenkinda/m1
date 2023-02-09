@@ -160,13 +160,14 @@ export const chatroomController = {
     );
     if (otherUserSocketId) {
       socket.to(otherUserSocketId).emit("new-message", message);
-    } else {
-      await prisma.notification.create({
-        data: {
-          conversationMessageId: message.id,
-        },
-      });
     }
+    const notif = await prisma.notification.create({
+      data: {
+        conversationMessageId: message.id,
+        read: false,
+      },
+    });
+    console.log(notif);
     return message;
   },
 } satisfies ApiController;
